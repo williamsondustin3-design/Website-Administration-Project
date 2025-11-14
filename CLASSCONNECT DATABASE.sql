@@ -13,6 +13,7 @@ CREATE TABLE usergroups (
 
 CREATE TABLE groups (
     subject_id VARCHAR(50) PRIMARY KEY,
+	Class_Name VARCHAR(50) UNIQUE NOT NULL,
     class_id VARCHAR(50) UNIQUE NOT NULL,
     group_name VARCHAR(50) UNIQUE NOT NULL
 );
