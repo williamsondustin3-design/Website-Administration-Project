@@ -17,7 +17,7 @@
 
     <nav>
       <ul>
-        <li><a href="CLASSCONNECT3.html">Home</a></li>
+        <li><a href="ClassConnect.html">Home</a></li>
         <li><a href="courses.html">Courses</a></li>
         <li><a href="groups.html">Groups</a></li>
         <li><a href="about.html">About</a></li>
@@ -29,6 +29,8 @@
       <a id="createBtn">Create Account</a>
     </div>
   </header>
+  
+  <div id="globalMessage" class="global-msg"></div>
 
   <main>
     <h2>Welcome to ClassConnect</h2>
@@ -87,6 +89,16 @@
       createPopup.style.display = "none";
       overlay.style.display = "none";
     }
+	
+	function showGlobalMessage(text) {
+      const msg = document.getElementById("globalMessage");
+      msg.innerText = text;
+      msg.style.display = "block";
+
+      setTimeout(() => {
+        msg.style.display = "none";
+      }, 2500);
+    }
 
     document.getElementById("createSubmit").addEventListener("click", () => {
       const user = document.getElementById("newUser").value;
@@ -103,6 +115,7 @@
 
         if (data.includes("success")) {
           closeAll();
+		  showGlobalMessage("Account created successfully!");
         }
       });
     });
@@ -122,6 +135,7 @@
 
         if (data.includes("success")) {
           closeAll();
+		  showGlobalMessage("Logged in successfully!");
         }
       });
     });
