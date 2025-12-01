@@ -26,7 +26,7 @@ The PHP endpoints currently echo plain text responses such as `Account created s
 - `CLASSCONNECT DATABASE.sql` — SQL schema to create `classconnect` DB and tables
 
 # Created by:
--Aiden
--Dustin
--Levi
--Rolan
+- Aiden
+- Dustin
+- Levi
+- Rolan
