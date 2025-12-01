@@ -22,34 +22,52 @@
     </nav>
   </header>
 
-<main>
-  <h2>Enter Your Course Code</h2>
-  <p>Join your class group by entering your unique course code below.</p>
+<main class="courses-page">
 
-  <div class="join-course-area">
-    <input type="text" id="courseCode" placeholder="Enter course code">
-    <button onclick="joinCourse()">Join Course</button>
-    <p id="courseMessage" class="course-message"></p>
-  </div>
+  <section class="course-search">
+    <h2>Find Your Course</h2>
+    <p>Search by course code or course name, then join the class from the results.</p>
 
-  <section id="joinedCoursesSection">
-    <h3>Joined Courses</h3>
-    <div id="joinedCoursesList">
-      <p>You haven't joined any courses yet.</p>
+    <div class="search-row">
+      <input
+        type="text"
+        id="courseSearchInput"
+        placeholder="e.g. CIS 350, Data Structures"
+      >
+      <button id="courseSearchButton">Search</button>
     </div>
+    <p id="searchMessage" class="course-message"></p>
   </section>
 
-  <section id="courseDetailSection" style="display:none;">
-    <h3 id="courseTitle"></h3>
+  <section class="courses-layout">
 
-    <div id="postsContainer">
+    <div class="courses-column">
+      <h3>Search Results</h3>
+      <div id="searchResults">
+        <p>Type a search above to see available courses.</p>
+      </div>
+    </div>
+
+    <div class="courses-column">
+      <h3>Joined Courses</h3>
+      <div id="joinedCourses">
+        <p>You haven't joined any courses yet.</p>
+      </div>
+    </div>
+
+    <div class="courses-column" id="courseDetailSection" style="display:none;">
+      <h3 id="courseTitle"></h3>
+      <p id="courseMeta"></p>
+      <button id="joinCourseButton" type="button">Join Course</button>
+      <p id="joinStatus" class="course-message"></p>
+
+      <hr>
+
       <h4>Posts</h4>
       <div id="postsList">
         <p>No posts yet. Be the first to share something!</p>
       </div>
-    </div>
 
-    <div id="newPostContainer">
       <h4>Add a new post</h4>
       <form id="newPostForm">
         <textarea
@@ -64,17 +82,136 @@
   </section>
 </main>
 
-  <script>
-    function joinCourse() {
-      const code = document.getElementById('courseCode').value;
-      if (code.trim() === '') {
-        alert('Please enter a valid course code.');
-      } else {
-        alert(`You joined course: ${code}`);
-      }
+<script>
+  const allCourses = [
+    {
+      code: "CIS350",
+      name: "Data Structures",
+      term: "Fall 2025",
+      instructor: "Dr. Smith",
+      description: "Core concepts of data structures including lists, stacks, queues, and trees."
+    },
+    {
+      code: "CIS340",
+      name: "Web Development",
+      term: "Fall 2025",
+      instructor: "Prof. Johnson",
+      description: "HTML, CSS, JavaScript, and front-end app design."
+    },
+    {
+      code: "MATH110",
+      name: "College Algebra",
+      term: "Fall 2025",
+      instructor: "Dr. Lee",
+      description: "Functions, graphs, and algebraic problem solving."
+    },
+    {
+      code: "ENG101",
+      name: "English Composition",
+      term: "Fall 2025",
+      instructor: "Dr. Brown",
+      description: "Academic writing, argumentation, and research skills."
     }
-  </script>
+  ];
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function renderSearchResults(courses) {
+    const container = document.getElementById("searchResults");
+
+    if (!courses || courses.length === 0) {
+      container.innerHTML = "<p>No courses found. Try a different search.</p>";
+      return;
+    }
+
+    container.innerHTML = courses
+      .map((c) => {
+        return `
+          <article class="course-card">
+            <h4>${escapeHtml(c.code)} - ${escapeHtml(c.name)}</h4>
+            <p>${escapeHtml(c.description)}</p>
+            <p><strong>Term:</strong> ${escapeHtml(c.term)} | <strong>Instructor:</strong> ${escapeHtml(c.instructor)}</p>
+            <button
+              type="button"
+              class="view-course-btn"
+              data-code="${escapeHtml(c.code)}"
+            >
+              View Course
+            </button>
+          </article>
+        `;
+      })
+      .join("");
+
+    const buttons = container.querySelectorAll(".view-course-btn");
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const code = btn.getAttribute("data-code");
+        showCourseDetail(code);
+      });
+    });
+  }
+
+  function handleSearch() {
+    const input = document.getElementById("courseSearchInput");
+    const msg   = document.getElementById("searchMessage");
+    const query = input.value.trim().toLowerCase();
+
+    if (!query) {
+      msg.textContent = "";
+      renderSearchResults(allCourses);
+      return;
+    }
+
+    const filtered = allCourses.filter((c) => {
+      return (
+        c.code.toLowerCase().includes(query) ||
+        c.name.toLowerCase().includes(query)
+      );
+    });
+
+    msg.textContent = `Found ${filtered.length} course(s) matching "${input.value.trim()}"`;
+    renderSearchResults(filtered);
+  }
+
+  function showCourseDetail(code) {
+    const course = allCourses.find((c) => c.code === code);
+    const section = document.getElementById("courseDetailSection");
+    const title   = document.getElementById("courseTitle");
+    const meta    = document.getElementById("courseMeta");
+
+    if (!course) {
+      section.style.display = "none";
+      return;
+    }
+
+    section.style.display = "block";
+    title.textContent = `${course.code} - ${course.name}`;
+    meta.textContent  = `${course.term} • Instructor: ${course.instructor}`;
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    renderSearchResults(allCourses);
+    const searchInput  = document.getElementById("courseSearchInput");
+    const searchButton = document.getElementById("courseSearchButton");
+    searchButton.addEventListener("click", handleSearch);
+    searchInput.addEventListener("keyup", (e) => {
+      if (e.key === "Enter") {
+        handleSearch();
+      }
+    });
+  });
+</script>
 </body>
 </html>
+
+
 
 
