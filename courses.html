@@ -22,344 +22,369 @@
     </nav>
   </header>
 
-<main class="courses-page">
+  <main class="courses-page">
+  <header class="page-header">
+    <h1>Courses</h1>
+    <p>Search for your classes, join them, and view course discussions.</p>
+  </header>
 
-  <section class="course-search">
-    <h2>Find Your Course</h2>
+  <section class="joined-courses-bar" aria-labelledby="joined-courses-heading">
+    <h2 id="joined-courses-heading">Joined Courses</h2>
+    <p class="helper-text">Select a course to jump down to its details and posts.</p>
+    <div id="joinedCourses">
+      <p>You haven't joined any courses yet.</p>
+    </div>
+  </section>
+
+  <section class="course-search" aria-labelledby="course-search-heading">
+    <h2 id="course-search-heading">Find Your Course</h2>
     <p>Search by course code or course name, then join the class from the results.</p>
 
-    <div class="search-row">
+    <form id="courseSearchForm" class="search-row">
       <input
         type="text"
         id="courseSearchInput"
+        name="query"
         placeholder="e.g. CIS 350, Data Structures"
       >
-      <button id="courseSearchButton">Search</button>
-    </div>
+      <button id="courseSearchButton" type="submit">Search</button>
+    </form>
+
     <p id="searchMessage" class="course-message"></p>
   </section>
 
-  <section class="courses-layout">
-
+  <section class="courses-layout" aria-label="Course overview">
     <div class="courses-column">
-      <h3>Search Results</h3>
+      <h2>Search Results</h2>
+      <p class="helper-text">Select a course below to view details and join.</p>
       <div id="searchResults">
         <p>Type a search above to see available courses.</p>
       </div>
     </div>
 
-    <div class="courses-column">
-      <h3>Joined Courses</h3>
-      <div id="joinedCourses">
-        <p>You haven't joined any courses yet.</p>
-      </div>
-    </div>
-
     <div class="courses-column" id="courseDetailSection" style="display:none;">
-      <h3 id="courseTitle"></h3>
+      <h2 id="courseTitle"></h2>
       <p id="courseMeta"></p>
+
       <button id="joinCourseButton" type="button">Join Course</button>
       <p id="joinStatus" class="course-message"></p>
 
       <hr>
 
-      <h4>Posts</h4>
-      <div id="postsList">
-        <p>No posts yet. Be the first to share something!</p>
-      </div>
+      <section aria-labelledby="course-posts-heading">
+        <h3 id="course-posts-heading">Posts</h3>
+        <div id="postsList">
+          <p>No posts yet. Be the first to share something!</p>
+        </div>
+      </section>
 
-      <h4>Add a new post</h4>
-      <form id="newPostForm">
-        <textarea
-          id="newPostText"
-          rows="3"
-          placeholder="Share something with the class..."
-          required
-        ></textarea>
-        <button type="submit">Post</button>
-      </form>
+      <section aria-labelledby="course-new-post-heading">
+        <h3 id="course-new-post-heading">Add a New Post</h3>
+        <p id="postAccessNote" class="helper-text"></p>
+        <form id="newPostForm">
+          <label for="newPostText" class="sr-only">Post content</label>
+          <textarea
+            id="newPostText"
+            rows="3"
+            placeholder="Share something with the class..."
+            required
+          ></textarea>
+          <button type="submit">Post</button>
+        </form>
+      </section>
     </div>
   </section>
 </main>
 
-<script>
-  const allCourses = [
-    { code: "CIS350", name: "Data Structures", term: "Fall 2025", instructor: "Dr. Smith",
-      description: "Core concepts of data structures including lists, stacks, queues, and trees." },
-    { code: "CIS340", name: "Web Development", term: "Fall 2025", instructor: "Prof. Johnson",
-      description: "HTML, CSS, JavaScript, and front-end app design." },
-    { code: "MATH110", name: "College Algebra", term: "Fall 2025", instructor: "Dr. Lee",
-      description: "Functions, graphs, and algebraic problem solving." },
-    { code: "ENG101", name: "English Composition", term: "Fall 2025", instructor: "Dr. Brown",
-      description: "Academic writing, argumentation, and research skills." }
-  ];
+  <script>
+    const allCourses = [
+      { code: "CIS350", name: "Data Structures", term: "Fall 2025", instructor: "Dr. Smith",
+        description: "Core concepts of data structures including lists, stacks, queues, and trees." },
+      { code: "CIS340", name: "Web Development", term: "Fall 2025", instructor: "Prof. Johnson",
+        description: "HTML, CSS, JavaScript, and front-end app design." },
+      { code: "MATH110", name: "College Algebra", term: "Fall 2025", instructor: "Dr. Lee",
+        description: "Functions, graphs, and algebraic problem solving." },
+      { code: "ENG101", name: "English Composition", term: "Fall 2025", instructor: "Dr. Brown",
+        description: "Academic writing, argumentation, and research skills." }
+    ];
 
-  const STORAGE_JOINED = "classconnect_joinedCourses";
-  const STORAGE_POSTS  = "classconnect_coursePosts";
+    const STORAGE_JOINED = "classconnect_joinedCourses";
+    const STORAGE_POSTS  = "classconnect_coursePosts";
 
-  let joinedCourses = loadJoinedCourses();
-  let coursePosts   = loadCoursePosts();
-  let currentCourseCode = null;
+    let joinedCourses = loadJoinedCourses();
+    let coursePosts   = loadCoursePosts();
+    let currentCourseCode = null;
 
-  function loadJoinedCourses() {
-    const saved = localStorage.getItem(STORAGE_JOINED);
-    if (!saved) return [];
-    try {
-      return JSON.parse(saved);
-    } catch (e) {
-      console.error("Error parsing joined courses:", e);
-      return [];
-    }
-  }
-
-  function saveJoinedCourses() {
-    localStorage.setItem(STORAGE_JOINED, JSON.stringify(joinedCourses));
-  }
-
-  function loadCoursePosts() {
-    const saved = localStorage.getItem(STORAGE_POSTS);
-    if (!saved) return {};
-    try {
-      return JSON.parse(saved);
-    } catch (e) {
-      console.error("Error parsing course posts:", e);
-      return {};
-    }
-  }
-
-  function saveCoursePosts() {
-    localStorage.setItem(STORAGE_POSTS, JSON.stringify(coursePosts));
-  }
-
-  function escapeHtml(str) {
-    return String(str)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-  }
-
-  function renderSearchResults(courses) {
-    const container = document.getElementById("searchResults");
-
-    if (!courses || courses.length === 0) {
-      container.innerHTML = "<p>No courses found. Try a different search.</p>";
-      return;
+    function loadJoinedCourses() {
+      const saved = localStorage.getItem(STORAGE_JOINED);
+      if (!saved) return [];
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error("Error parsing joined courses:", e);
+        return [];
+      }
     }
 
-    container.innerHTML = courses
-      .map((c) => {
-        const joined = joinedCourses.includes(c.code);
-        return `
-          <article class="course-card">
-            <h4>${escapeHtml(c.code)} - ${escapeHtml(c.name)}</h4>
-            <p>${escapeHtml(c.description)}</p>
-            <p><strong>Term:</strong> ${escapeHtml(c.term)} | <strong>Instructor:</strong> ${escapeHtml(c.instructor)}</p>
-            <button
-              type="button"
-              class="view-course-btn"
-              data-code="${escapeHtml(c.code)}"
-            >
-              View Course
-            </button>
-            ${joined ? '<span class="badge">Joined</span>' : ""}
-          </article>
-        `;
-      })
-      .join("");
+    function saveJoinedCourses() {
+      localStorage.setItem(STORAGE_JOINED, JSON.stringify(joinedCourses));
+    }
 
-    const buttons = container.querySelectorAll(".view-course-btn");
-    buttons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const code = btn.getAttribute("data-code");
-        showCourseDetail(code);
+    function loadCoursePosts() {
+      const saved = localStorage.getItem(STORAGE_POSTS);
+      if (!saved) return {};
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error("Error parsing course posts:", e);
+        return {};
+      }
+    }
+
+    function saveCoursePosts() {
+      localStorage.setItem(STORAGE_POSTS, JSON.stringify(coursePosts));
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function renderSearchResults(courses) {
+      const container = document.getElementById("searchResults");
+
+      if (!courses || courses.length === 0) {
+        container.innerHTML = "<p>No courses found. Try a different search.</p>";
+        return;
+      }
+
+      container.innerHTML = courses
+        .map((c) => {
+          const joined = joinedCourses.includes(c.code);
+          return `
+            <article class="course-card">
+              <h4>${escapeHtml(c.code)} - ${escapeHtml(c.name)}</h4>
+              <p>${escapeHtml(c.description)}</p>
+              <p><strong>Term:</strong> ${escapeHtml(c.term)} | <strong>Instructor:</strong> ${escapeHtml(c.instructor)}</p>
+              <button
+                type="button"
+                class="view-course-btn"
+                data-code="${escapeHtml(c.code)}"
+              >
+                View Course
+              </button>
+              ${joined ? '<span class="badge">Joined</span>' : ""}
+            </article>
+          `;
+        })
+        .join("");
+
+      const buttons = container.querySelectorAll(".view-course-btn");
+      buttons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const code = btn.getAttribute("data-code");
+          showCourseDetail(code);
+        });
       });
-    });
-  }
-
-  function renderJoinedCourses() {
-    const container = document.getElementById("joinedCourses");
-
-    if (!joinedCourses || joinedCourses.length === 0) {
-      container.innerHTML = "<p>You haven't joined any courses yet.</p>";
-      return;
     }
 
-    const joinedDetails = joinedCourses
-      .map((code) => allCourses.find((c) => c.code === code))
-      .filter(Boolean);
+    function renderJoinedCourses() {
+      const container = document.getElementById("joinedCourses");
 
-    container.innerHTML = `
-      <ul class="joined-courses-list">
-        ${joinedDetails
-          .map(
-            (c) => `
-              <li>
-                <button
-                  type="button"
-                  class="joined-course-btn"
-                  data-code="${escapeHtml(c.code)}"
-                >
-                  ${escapeHtml(c.code)} - ${escapeHtml(c.name)}
-                </button>
-              </li>
-            `
-          )
-          .join("")}
-      </ul>
-    `;
+      if (!joinedCourses || joinedCourses.length === 0) {
+        container.innerHTML = "<p>You haven't joined any courses yet.</p>";
+        return;
+      }
 
-    const buttons = container.querySelectorAll(".joined-course-btn");
-    buttons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const code = btn.getAttribute("data-code");
-        showCourseDetail(code);
+      const joinedDetails = joinedCourses
+        .map((code) => allCourses.find((c) => c.code === code))
+        .filter(Boolean);
+
+      container.innerHTML = `
+        <ul class="joined-courses-list">
+          ${joinedDetails
+            .map(
+              (c) => `
+                <li>
+                  <button
+                    type="button"
+                    class="joined-course-btn"
+                    data-code="${escapeHtml(c.code)}"
+                  >
+                    ${escapeHtml(c.code)} - ${escapeHtml(c.name)}
+                  </button>
+                </li>
+              `
+            )
+            .join("")}
+        </ul>
+      `;
+
+      const buttons = container.querySelectorAll(".joined-course-btn");
+      buttons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const code = btn.getAttribute("data-code");
+          showCourseDetail(code);
+        });
       });
-    });
-  }
-
-  function renderPostsForCourse(code) {
-    const container = document.getElementById("postsList");
-    const posts = coursePosts[code] || [];
-
-    if (posts.length === 0) {
-      container.innerHTML = "<p>No posts yet. Be the first to share something!</p>";
-      return;
     }
 
-    container.innerHTML = posts
-      .map((p) => {
-        return `
-          <article class="post">
-            <header>
-              <strong>${escapeHtml(p.author || "Anonymous")}</strong>
-              <span class="date">${escapeHtml(p.createdAt || "")}</span>
-            </header>
-            <p>${escapeHtml(p.content)}</p>
-          </article>
-        `;
-      })
-      .join("");
-  }
+    function renderPostsForCourse(code) {
+      const container = document.getElementById("postsList");
+      const posts = coursePosts[code] || [];
 
-  function showCourseDetail(code) {
-    const course = allCourses.find((c) => c.code === code);
-    const section = document.getElementById("courseDetailSection");
-    const title   = document.getElementById("courseTitle");
-    const meta    = document.getElementById("courseMeta");
-    const joinBtn = document.getElementById("joinCourseButton");
-    const joinStatus = document.getElementById("joinStatus");
+      if (posts.length === 0) {
+        container.innerHTML = "<p>No posts yet. Be the first to share something!</p>";
+        return;
+      }
 
-    if (!course) {
-      section.style.display = "none";
-      return;
+      container.innerHTML = posts
+        .map((p) => {
+          return `
+            <article class="post">
+              <header>
+                <strong>${escapeHtml(p.author || "Anonymous")}</strong>
+                <span class="date">${escapeHtml(p.createdAt || "")}</span>
+              </header>
+              <p>${escapeHtml(p.content)}</p>
+            </article>
+          `;
+        })
+        .join("");
     }
 
-    currentCourseCode = course.code;
+function showCourseDetail(code) {
+  const course = allCourses.find((c) => c.code === code);
+  const section = document.getElementById("courseDetailSection");
+  const title   = document.getElementById("courseTitle");
+  const meta    = document.getElementById("courseMeta");
+  const joinBtn = document.getElementById("joinCourseButton");
+  const joinStatus = document.getElementById("joinStatus");
+  const postAccessNote = document.getElementById("postAccessNote");
 
-    section.style.display = "block";
-    title.textContent = `${course.code} - ${course.name}`;
-    meta.textContent  = `${course.term} • Instructor: ${course.instructor}`;
-
-    const isJoined = joinedCourses.includes(course.code);
-    joinBtn.textContent = isJoined ? "Joined" : "Join Course";
-    joinBtn.disabled = isJoined;
-    joinStatus.textContent = isJoined
-      ? "You have already joined this course."
-      : "";
-
-    renderPostsForCourse(course.code);
+  if (!course) {
+    section.style.display = "none";
+    return;
   }
 
-  function handleSearch() {
-    const input = document.getElementById("courseSearchInput");
-    const msg   = document.getElementById("searchMessage");
-    const query = input.value.trim().toLowerCase();
+  currentCourseCode = course.code;
 
-    if (!query) {
-      msg.textContent = "";
-      renderSearchResults(allCourses);
-      return;
+  section.style.display = "block";
+  title.textContent = `${course.code} - ${course.name}`;
+  meta.textContent  = `${course.term} • Instructor: ${course.instructor}`;
+
+  const isJoined = joinedCourses.includes(course.code);
+  joinBtn.textContent = isJoined ? "Joined" : "Join Course";
+  joinBtn.disabled = isJoined;
+  joinStatus.textContent = isJoined
+    ? "You have already joined this course."
+    : "";
+
+  postAccessNote.textContent = isJoined
+    ? ""
+    : "Join this course to start posting.";
+
+  renderPostsForCourse(course.code);
+
+  section.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+    function handleSearch() {
+      const input = document.getElementById("courseSearchInput");
+      const msg   = document.getElementById("searchMessage");
+      const query = input.value.trim().toLowerCase();
+
+      if (!query) {
+        msg.textContent = "";
+        renderSearchResults(allCourses);
+        return;
+      }
+
+      const filtered = allCourses.filter((c) => {
+        return (
+          c.code.toLowerCase().includes(query) ||
+          c.name.toLowerCase().includes(query)
+        );
+      });
+
+      msg.textContent = `Found ${filtered.length} course(s) matching "${input.value.trim()}"`;
+      renderSearchResults(filtered);
     }
 
-    const filtered = allCourses.filter((c) => {
-      return (
-        c.code.toLowerCase().includes(query) ||
-        c.name.toLowerCase().includes(query)
-      );
-    });
-
-    msg.textContent = `Found ${filtered.length} course(s) matching "${input.value.trim()}"`;
-    renderSearchResults(filtered);
-  }
-
-  function handleJoinCurrentCourse() {
-    if (!currentCourseCode) return;
-
-    const code = currentCourseCode;
-    const joinBtn    = document.getElementById("joinCourseButton");
-    const joinStatus = document.getElementById("joinStatus");
-
-    if (!joinedCourses.includes(code)) {
-      joinedCourses.push(code);
-      saveJoinedCourses();
-    }
-
-    joinBtn.textContent = "Joined";
-    joinBtn.disabled = true;
-    joinStatus.textContent = "You have joined this course.";
-
-    renderJoinedCourses();
-    handleSearch();
-  }
-
-  function setupPostForm() {
-    const form = document.getElementById("newPostForm");
-    const textarea = document.getElementById("newPostText");
-
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
+    function handleJoinCurrentCourse() {
       if (!currentCourseCode) return;
 
-      const content = textarea.value.trim();
-      if (!content) return;
+      const code = currentCourseCode;
+      const joinBtn    = document.getElementById("joinCourseButton");
+      const joinStatus = document.getElementById("joinStatus");
+      const postAccessNote = document.getElementById("postAccessNote");
 
-      const now = new Date();
-      const post = {
-        author: "You",
-        content,
-        createdAt: now.toLocaleString()
-      };
-
-      if (!coursePosts[currentCourseCode]) {
-        coursePosts[currentCourseCode] = [];
+      if (!joinedCourses.includes(code)) {
+        joinedCourses.push(code);
+        saveJoinedCourses();
       }
 
-      coursePosts[currentCourseCode].unshift(post);
-      saveCoursePosts();
-      textarea.value = "";
-      renderPostsForCourse(currentCourseCode);
-    });
-  }
+      joinBtn.textContent = "Joined";
+      joinBtn.disabled = true;
+      joinStatus.textContent = "You have joined this course.";
+      postAccessNote.textContent = "";
 
-  document.addEventListener("DOMContentLoaded", () => {
-    renderSearchResults(allCourses);
-    renderJoinedCourses();
-    setupPostForm();
+      renderJoinedCourses();
+      handleSearch();
+    }
 
-    const searchInput  = document.getElementById("courseSearchInput");
-    const searchButton = document.getElementById("courseSearchButton");
-    searchButton.addEventListener("click", handleSearch);
-    searchInput.addEventListener("keyup", (e) => {
-      if (e.key === "Enter") {
+    function setupPostForm() {
+      const form = document.getElementById("newPostForm");
+      const textarea = document.getElementById("newPostText");
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (!currentCourseCode) return;
+
+        const content = textarea.value.trim();
+        if (!content) return;
+
+        const now = new Date();
+        const post = {
+          author: "You",
+          content,
+          createdAt: now.toLocaleString()
+        };
+
+        if (!coursePosts[currentCourseCode]) {
+          coursePosts[currentCourseCode] = [];
+        }
+
+        coursePosts[currentCourseCode].unshift(post);
+        saveCoursePosts();
+        textarea.value = "";
+        renderPostsForCourse(currentCourseCode);
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderSearchResults(allCourses);
+      renderJoinedCourses();
+      setupPostForm();
+
+      const searchForm   = document.getElementById("courseSearchForm");
+      const searchInput  = document.getElementById("courseSearchInput");
+      const searchButton = document.getElementById("courseSearchButton");
+
+      searchForm.addEventListener("submit", (e) => {
+        e.preventDefault();
         handleSearch();
-      }
-    });
+      });
 
-    const joinBtn = document.getElementById("joinCourseButton");
-    joinBtn.addEventListener("click", handleJoinCurrentCourse);
-  });
-</script>
+      searchButton.addEventListener("click", handleSearch);
+
+      const joinBtn = document.getElementById("joinCourseButton");
+      joinBtn.addEventListener("click", handleJoinCurrentCourse);
+    });
+  </script>
 </body>
 </html>
