@@ -5,6 +5,92 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About - ClassConnect</title>
   <link rel="stylesheet" href="style.css">
+   <style>
+    /* ---------- GLOBAL ---------- */
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f5f7;
+      color: #333;
+    }
+
+    /* ---------- HEADER ---------- */
+    header {
+      background: #1e88e5;
+      color: white;
+      padding: 15px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-container img {
+      height: 50px;
+      margin-right: 10px;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin: 0;
+    }
+
+    /* ---------- NAVIGATION ---------- */
+    nav ul {
+      list-style: none;
+      margin: 0;
+      display: flex;
+      gap: 20px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+      padding: 8px 12px;
+      transition: background 0.3s;
+    }
+
+    nav a:hover {
+      background: rgba(255,255,255,0.25);
+      border-radius: 6px;
+    }
+
+    nav a.active {
+      background: white;
+      color: #1e88e5;
+      border-radius: 6px;
+    }
+
+    /* ---------- MAIN CONTENT ---------- */
+    .content {
+      padding: 40px;
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      margin-top: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .content h2 {
+      color: #1e88e5;
+      margin-top: 0;
+    }
+
+    /* ---------- FOOTER ---------- */
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      padding: 20px;
+      color: #555;
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -27,90 +113,7 @@
     <p>ClassConnect was created to help students and staff communicate, organize, and collaborate more easily within their courses. Inspired by apps like Nextdoor, we wanted to make it simple to stay connected with classmates and instructors by sharing class information, study help, and asking general questions.</p>
   </main>
 </body>
-  /* ---------- GLOBAL ---------- */
-body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  background: #f4f5f7;
-  color: #333;
-}
-
-/* ---------- HEADER ---------- */
-header {
-  background: #1e88e5;
-  color: white;
-  padding: 15px 40px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-
-.logo-container {
-  display: flex;
-  align-items: center;
-}
-
-.logo-container img {
-  height: 50px;
-  margin-right: 10px;
-}
-
-h1 {
-  font-size: 28px;
-  margin: 0;
-}
-
-/* ---------- NAVIGATION ---------- */
-nav ul {
-  list-style: none;
-  margin: 0;
-  display: flex;
-  gap: 20px;
-}
-
-nav a {
-  text-decoration: none;
-  color: white;
-  font-weight: bold;
-  padding: 8px 12px;
-  transition: background 0.3s;
-}
-
-nav a:hover {
-  background: rgba(255,255,255,0.25);
-  border-radius: 6px;
-}
-
-nav a.active {
-  background: white;
-  color: #1e88e5;
-  border-radius: 6px;
-}
-
-/* ---------- MAIN CONTENT ---------- */
-.content {
-  padding: 40px;
-  max-width: 800px;
-  margin: auto;
-  background: white;
-  margin-top: 30px;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-
-.content h2 {
-  color: #1e88e5;
-  margin-top: 0;
-}
-
-/* ---------- FOOTER ---------- */
-footer {
-  text-align: center;
-  margin-top: 50px;
-  padding: 20px;
-  color: #555;
-}
 
 
 </html>
+
