@@ -114,8 +114,8 @@
         document.getElementById("createMsg").innerText = data;
 
         if (data.includes("success")) {
-          closeAll();
-		  showGlobalMessage("Account created successfully!");
+          alert("Account created successfully!");
+		  window.location.href = "ClassConnect.html";
         }
       });
     });
@@ -134,8 +134,8 @@
         document.getElementById("loginMsg").innerText = data;
 
         if (data.includes("success")) {
-          closeAll();
-		  showGlobalMessage("Logged in successfully!");
+          alert("Logged in successfully!");
+          window.location.href = "ClassConnect.html";
         }
       });
     });
@@ -144,3 +144,4 @@
 
 </body>
 </html>
+
