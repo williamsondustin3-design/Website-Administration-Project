@@ -1,18 +1,335 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Courses - ClassConnect</title>
-  <link rel="stylesheet" href="style.css">
+
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    :root {
+      --accent: #2a9d8f;
+      --muted: #6b7280;
+      --bg: #f7fafc;
+      --card: #ffffff;
+      --radius: 8px;
+      --gap: 16px;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: var(--bg);
+      color: #111827;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* HEADER */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(90deg, #0f172a 0%, #1f2937 100%);
+      color: #fff;
+      padding: 12px 20px;
+    }
+
+    .logo-container {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .logo-container img {
+      width: 44px;
+      height: 44px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+
+    header h1 {
+      font-size: 1.2rem;
+      margin: 0;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      align-items: center;
+    }
+
+    nav a {
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      padding: 8px 10px;
+      border-radius: 6px;
+    }
+
+    nav a.active,
+    nav a:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    /* MAIN LAYOUT */
+    main.courses-page {
+      max-width: 1100px;
+      margin: 20px auto;
+      padding: 0 16px 80px;
+    }
+
+    /* SEARCH BAR */
+    .course-search {
+      margin-bottom: 18px;
+    }
+
+    .course-search-bar {
+      background: var(--card);
+      padding: 12px;
+      border-radius: var(--radius);
+      box-shadow: 0 1px 4px rgba(2, 6, 23, 0.06);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .course-search-bar input[type="search"],
+    .course-search-bar select {
+      padding: 8px 10px;
+      border: 1px solid #e6e9ee;
+      border-radius: 6px;
+      background: #fff;
+      font-size: 0.95rem;
+    }
+
+    /* JOINED COURSES SECTION */
+    .joined-section {
+      margin-bottom: 20px;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: 0 1px 4px rgba(2, 6, 23, 0.06);
+      padding: 14px;
+    }
+
+    .joined-section h2 {
+      margin-top: 0;
+    }
+
+    .joined-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .joined-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #e0f2f1;
+      border: 1px solid #c3ece8;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .joined-pill span.course-name {
+      font-weight: 500;
+    }
+
+    .joined-pill button.leave-btn {
+      border: none;
+      background: transparent;
+      font-size: 0.85rem;
+      cursor: pointer;
+      color: #6b7280;
+    }
+
+    /* COURSES GRID + CARDS */
+    .courses-section h2 {
+      margin-top: 0;
+    }
+
+    .courses-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .course-card {
+      background: var(--card);
+      border-radius: 10px;
+      padding: 14px;
+      box-shadow: 0 6px 12px rgba(2, 6, 23, 0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 130px;
+    }
+
+    .course-card h3 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    .course-meta {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .course-desc {
+      font-size: 0.9rem;
+    }
+
+    /* BUTTON ROW */
+    .course-actions {
+      margin-top: auto;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .primary-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 8px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .primary-btn:hover {
+      background: #238277;
+    }
+
+    .secondary-btn {
+      background: transparent;
+      border: 1px solid #e6e9ee;
+      color: #111827;
+      padding: 8px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    /* POSTS SECTION */
+    .posts-section {
+      margin-top: 32px;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: 0 1px 4px rgba(2, 6, 23, 0.06);
+      padding: 16px;
+    }
+
+    .posts-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 8px;
+      justify-content: space-between;
+    }
+
+    .posts-header h2 {
+      margin: 0;
+    }
+
+    .posts-header .current-course-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .posts-list {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 260px;
+      overflow-y: auto;
+    }
+
+    .post-card {
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      padding: 8px 10px;
+      font-size: 0.9rem;
+      background: #f9fafb;
+    }
+
+    .post-meta {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .post-empty {
+      font-size: 0.9rem;
+      color: var(--muted);
+      padding: 8px 4px;
+    }
+
+    .new-post-form {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .new-post-form textarea {
+      resize: vertical;
+      min-height: 60px;
+      max-height: 160px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      font-family: inherit;
+      font-size: 0.9rem;
+    }
+
+    .new-post-form button {
+      align-self: flex-end;
+    }
+
+    /* Responsive */
+    @media (max-width: 520px) {
+      nav ul {
+        display: none;
+      }
+    }
+
+    /* Visually hidden but accessible */
+    .sr-only {
+      position: absolute !important;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
 </head>
+
 <body>
   <header>
     <div class="logo-container">
       <img src="download.png" alt="ClassConnect Logo">
-      <h1>ClassConnect</h1>
+      <div>
+        <h1>ClassConnect</h1>
+        <div style="font-size:0.85rem; color:rgba(255,255,255,0.8)">Courses & Material Lookup</div>
+      </div>
     </div>
-    <nav>
+
+    <nav aria-label="Main navigation">
       <ul>
         <li><a href="ClassConnect.html">Home</a></li>
         <li><a href="courses.html" class="active">Courses</a></li>
@@ -23,368 +340,390 @@
   </header>
 
   <main class="courses-page">
-  <header class="page-header">
-    <h1>Courses</h1>
-    <p>Search for your classes, join them, and view course discussions.</p>
-  </header>
-
-  <section class="joined-courses-bar" aria-labelledby="joined-courses-heading">
-    <h2 id="joined-courses-heading">Joined Courses</h2>
-    <p class="helper-text">Select a course to jump down to its details and posts.</p>
-    <div id="joinedCourses">
-      <p>You haven't joined any courses yet.</p>
-    </div>
-  </section>
-
-  <section class="course-search" aria-labelledby="course-search-heading">
-    <h2 id="course-search-heading">Find Your Course</h2>
-    <p>Search by course code or course name, then join the class from the results.</p>
-
-    <form id="courseSearchForm" class="search-row">
-      <input
-        type="text"
-        id="courseSearchInput"
-        name="query"
-        placeholder="e.g. CIS 350, Data Structures"
-      >
-      <button id="courseSearchButton" type="submit">Search</button>
-    </form>
-
-    <p id="searchMessage" class="course-message"></p>
-  </section>
-
-  <section class="courses-layout" aria-label="Course overview">
-    <div class="courses-column">
-      <h2>Search Results</h2>
-      <p class="helper-text">Select a course below to view details and join.</p>
-      <div id="searchResults">
-        <p>Type a search above to see available courses.</p>
+    <section class="course-search">
+      <div class="course-search-bar">
+        <input id="courseSearch" type="search" placeholder="Search courses..." aria-label="Search courses">
+        <select id="termFilter" aria-label="Filter by term">
+          <option value="">All Terms</option>
+          <option value="fall-2025">Fall 2025</option>
+          <option value="spring-2026">Spring 2026</option>
+        </select>
+        <select id="statusFilter" aria-label="Filter by status">
+          <option value="">All Courses</option>
+          <option value="joined">Joined</option>
+          <option value="not-joined">Not Joined</option>
+        </select>
       </div>
-    </div>
+    </section>
 
-    <div class="courses-column" id="courseDetailSection" style="display:none;">
-      <h2 id="courseTitle"></h2>
-      <p id="courseMeta"></p>
+    <section class="joined-section" aria-labelledby="joined-heading">
+      <h2 id="joined-heading">Joined Courses</h2>
+      <p class="joined-helper">
+        Click a joined course to jump to its discussion and posts below.
+      </p>
+      <div id="joinedCoursesList" class="joined-list">
+      </div>
+    </section>
 
-      <button id="joinCourseButton" type="button">Join Course</button>
-      <p id="joinStatus" class="course-message"></p>
+    <section class="courses-section" aria-labelledby="courses-heading">
+      <h2 id="courses-heading">Courses</h2>
+      <p>Browse available courses. Preview details or join directly from this page.</p>
 
-      <hr>
+      <div id="coursesGrid" class="courses-grid">
+        <article class="course-card" data-course-id="c1" data-term="fall-2025">
+          <h3>CIS 350 – Data Structures</h3>
+          <p class="course-meta">Fall 2025 • 3 Credits • Dr. Smith</p>
+          <p class="course-desc">
+            Linked lists, stacks, queues, trees, sorting, and searching.
+          </p>
+          <div class="course-actions">
+            <button class="secondary-btn preview-btn">Preview Course</button>
+            <button class="primary-btn join-btn">Join Course</button>
+          </div>
+        </article>
 
-      <section aria-labelledby="course-posts-heading">
-        <h3 id="course-posts-heading">Posts</h3>
-        <div id="postsList">
-          <p>No posts yet. Be the first to share something!</p>
+        <article class="course-card" data-course-id="c2" data-term="fall-2025">
+          <h3>CIS 340 – Web Development</h3>
+          <p class="course-meta">Fall 2025 • 3 Credits • Prof. Lee</p>
+          <p class="course-desc">
+            Build responsive websites using HTML, CSS, and JavaScript.
+          </p>
+          <div class="course-actions">
+            <button class="secondary-btn preview-btn">Preview Course</button>
+            <button class="primary-btn join-btn">Join Course</button>
+          </div>
+        </article>
+
+        <article class="course-card" data-course-id="c3" data-term="spring-2026">
+          <h3>CIS 498 – IoT Projects</h3>
+          <p class="course-meta">Spring 2026 • 3 Credits • Dr. Nguyen</p>
+          <p class="course-desc">
+            Work with sensors, microcontrollers, and cloud dashboards.
+          </p>
+          <div class="course-actions">
+            <button class="secondary-btn preview-btn">Preview Course</button>
+            <button class="primary-btn join-btn">Join Course</button>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <section id="postsSection" class="posts-section" aria-labelledby="posts-heading">
+      <div class="posts-header">
+        <div>
+          <h2 id="posts-heading">Course Posts</h2>
+          <div id="currentCourseLabel" class="current-course-label">
+            No course selected. Join or click a course to start posting.
+          </div>
         </div>
-      </section>
+      </div>
 
-      <section aria-labelledby="course-new-post-heading">
-        <h3 id="course-new-post-heading">Add a New Post</h3>
-        <p id="postAccessNote" class="helper-text"></p>
-        <form id="newPostForm">
-          <label for="newPostText" class="sr-only">Post content</label>
-          <textarea
-            id="newPostText"
-            rows="3"
-            placeholder="Share something with the class..."
-            required
-          ></textarea>
-          <button type="submit">Post</button>
-        </form>
-      </section>
-    </div>
-  </section>
-</main>
+      <div id="postsList" class="posts-list">
+        <div class="post-empty">No posts yet.</div>
+      </div>
+
+      <form id="newPostForm" class="new-post-form">
+        <label for="postText" class="sr-only">New post</label>
+        <textarea id="postText" placeholder="Write a new post for this course..."></textarea>
+        <button type="submit" class="primary-btn">Add Post</button>
+      </form>
+    </section>
+  </main>
 
   <script>
-    const allCourses = [
-      { code: "CIS350", name: "Data Structures", term: "Fall 2025", instructor: "Dr. Smith",
-        description: "Core concepts of data structures including lists, stacks, queues, and trees." },
-      { code: "CIS340", name: "Web Development", term: "Fall 2025", instructor: "Prof. Johnson",
-        description: "HTML, CSS, JavaScript, and front-end app design." },
-      { code: "MATH110", name: "College Algebra", term: "Fall 2025", instructor: "Dr. Lee",
-        description: "Functions, graphs, and algebraic problem solving." },
-      { code: "ENG101", name: "English Composition", term: "Fall 2025", instructor: "Dr. Brown",
-        description: "Academic writing, argumentation, and research skills." }
-    ];
+    const coursesGrid = document.getElementById("coursesGrid");
+    const courseCards = Array.from(document.querySelectorAll(".course-card"));
+    const joinedListEl = document.getElementById("joinedCoursesList");
+    const postsSection = document.getElementById("postsSection");
+    const currentCourseLabel = document.getElementById("currentCourseLabel");
+    const postsListEl = document.getElementById("postsList");
+    const newPostForm = document.getElementById("newPostForm");
+    const postTextInput = document.getElementById("postText");
 
-    const STORAGE_JOINED = "classconnect_joinedCourses";
-    const STORAGE_POSTS  = "classconnect_coursePosts";
+    const courseSearch = document.getElementById("courseSearch");
+    const termFilter = document.getElementById("termFilter");
+    const statusFilter = document.getElementById("statusFilter");
 
-    let joinedCourses = loadJoinedCourses();
-    let coursePosts   = loadCoursePosts();
-    let currentCourseCode = null;
+    let currentCourseId = null;
 
-    function loadJoinedCourses() {
-      const saved = localStorage.getItem(STORAGE_JOINED);
-      if (!saved) return [];
+    function getJoinedCourses() {
       try {
-        return JSON.parse(saved);
+        return JSON.parse(localStorage.getItem("joinedCourses_v1") || "{}");
       } catch (e) {
-        console.error("Error parsing joined courses:", e);
-        return [];
-      }
-    }
-
-    function saveJoinedCourses() {
-      localStorage.setItem(STORAGE_JOINED, JSON.stringify(joinedCourses));
-    }
-
-    function loadCoursePosts() {
-      const saved = localStorage.getItem(STORAGE_POSTS);
-      if (!saved) return {};
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        console.error("Error parsing course posts:", e);
         return {};
       }
     }
 
-    function saveCoursePosts() {
-      localStorage.setItem(STORAGE_POSTS, JSON.stringify(coursePosts));
+    function setJoinedCourses(data) {
+      localStorage.setItem("joinedCourses_v1", JSON.stringify(data));
     }
 
-    function escapeHtml(str) {
-      return String(str)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    }
-
-    function renderSearchResults(courses) {
-      const container = document.getElementById("searchResults");
-
-      if (!courses || courses.length === 0) {
-        container.innerHTML = "<p>No courses found. Try a different search.</p>";
-        return;
+    function getCoursePosts() {
+      try {
+        return JSON.parse(localStorage.getItem("coursePosts_v1") || "{}");
+      } catch (e) {
+        return {};
       }
+    }
 
-      container.innerHTML = courses
-        .map((c) => {
-          const joined = joinedCourses.includes(c.code);
-          return `
-            <article class="course-card">
-              <h4>${escapeHtml(c.code)} - ${escapeHtml(c.name)}</h4>
-              <p>${escapeHtml(c.description)}</p>
-              <p><strong>Term:</strong> ${escapeHtml(c.term)} | <strong>Instructor:</strong> ${escapeHtml(c.instructor)}</p>
-              <button
-                type="button"
-                class="view-course-btn"
-                data-code="${escapeHtml(c.code)}"
-              >
-                View Course
-              </button>
-              ${joined ? '<span class="badge">Joined</span>' : ""}
-            </article>
-          `;
-        })
-        .join("");
+    function setCoursePosts(data) {
+      localStorage.setItem("coursePosts_v1", JSON.stringify(data));
+    }
 
-      const buttons = container.querySelectorAll(".view-course-btn");
-      buttons.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const code = btn.getAttribute("data-code");
-          showCourseDetail(code);
-        });
+    function updateJoinButtons() {
+      const joined = getJoinedCourses();
+      courseCards.forEach(card => {
+        const id = card.dataset.courseId;
+        const joinBtn = card.querySelector(".join-btn");
+        if (!joinBtn) return;
+
+        if (joined[id]) {
+          joinBtn.textContent = "Joined";
+        } else {
+          joinBtn.textContent = "Join Course";
+        }
       });
     }
 
-    function renderJoinedCourses() {
-      const container = document.getElementById("joinedCourses");
+    function renderJoinedPills() {
+      const joined = getJoinedCourses();
+      joinedListEl.innerHTML = "";
 
-      if (!joinedCourses || joinedCourses.length === 0) {
-        container.innerHTML = "<p>You haven't joined any courses yet.</p>";
+      const joinedIds = Object.keys(joined)
+        .sort((a, b) => new Date(joined[a].joinedAt) - new Date(joined[b].joinedAt));
+
+      if (joinedIds.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "post-empty";
+        empty.textContent = "You haven't joined any courses yet.";
+        joinedListEl.appendChild(empty);
         return;
       }
 
-      const joinedDetails = joinedCourses
-        .map((code) => allCourses.find((c) => c.code === code))
-        .filter(Boolean);
+      joinedIds.forEach(id => {
+        const card = courseCards.find(c => c.dataset.courseId === id);
+        if (!card) return;
 
-      container.innerHTML = `
-        <ul class="joined-courses-list">
-          ${joinedDetails
-            .map(
-              (c) => `
-                <li>
-                  <button
-                    type="button"
-                    class="joined-course-btn"
-                    data-code="${escapeHtml(c.code)}"
-                  >
-                    ${escapeHtml(c.code)} - ${escapeHtml(c.name)}
-                  </button>
-                </li>
-              `
-            )
-            .join("")}
-        </ul>
-      `;
+        const name = card.querySelector("h3")?.textContent || "Course";
 
-      const buttons = container.querySelectorAll(".joined-course-btn");
-      buttons.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const code = btn.getAttribute("data-code");
-          showCourseDetail(code);
-        });
+        const pill = document.createElement("div");
+        pill.className = "joined-pill";
+        pill.dataset.courseId = id;
+
+        const nameSpan = document.createElement("span");
+        nameSpan.className = "course-name";
+        nameSpan.textContent = name;
+
+        const viewSpan = document.createElement("span");
+        viewSpan.style.fontSize = "0.8rem";
+        viewSpan.style.color = "#4b5563";
+        viewSpan.textContent = "View posts";
+
+        const leaveBtn = document.createElement("button");
+        leaveBtn.type = "button";
+        leaveBtn.className = "leave-btn";
+        leaveBtn.textContent = "✕";
+
+        pill.appendChild(nameSpan);
+        pill.appendChild(viewSpan);
+        pill.appendChild(leaveBtn);
+        joinedListEl.appendChild(pill);
       });
     }
 
-    function renderPostsForCourse(code) {
-      const container = document.getElementById("postsList");
-      const posts = coursePosts[code] || [];
-
-      if (posts.length === 0) {
-        container.innerHTML = "<p>No posts yet. Be the first to share something!</p>";
-        return;
+    function joinCourse(card) {
+      const id = card.dataset.courseId;
+      const joined = getJoinedCourses();
+      if (!joined[id]) {
+        joined[id] = { joinedAt: new Date().toISOString() };
+        setJoinedCourses(joined);
+        updateJoinButtons();
+        renderJoinedPills();
       }
-
-      container.innerHTML = posts
-        .map((p) => {
-          return `
-            <article class="post">
-              <header>
-                <strong>${escapeHtml(p.author || "Anonymous")}</strong>
-                <span class="date">${escapeHtml(p.createdAt || "")}</span>
-              </header>
-              <p>${escapeHtml(p.content)}</p>
-            </article>
-          `;
-        })
-        .join("");
     }
 
-function showCourseDetail(code) {
-  const course = allCourses.find((c) => c.code === code);
-  const section = document.getElementById("courseDetailSection");
-  const title   = document.getElementById("courseTitle");
-  const meta    = document.getElementById("courseMeta");
-  const joinBtn = document.getElementById("joinCourseButton");
-  const joinStatus = document.getElementById("joinStatus");
-  const postAccessNote = document.getElementById("postAccessNote");
+    function leaveCourseById(id) {
+      const joined = getJoinedCourses();
+      if (joined[id]) {
+        delete joined[id];
+        setJoinedCourses(joined);
+        updateJoinButtons();
+        renderJoinedPills();
 
-  if (!course) {
-    section.style.display = "none";
-    return;
-  }
+        if (currentCourseId === id) {
+          currentCourseId = null;
+          currentCourseLabel.textContent =
+            "No course selected. Join or click a course to start posting.";
+          renderPosts();
+        }
+      }
+    }
 
-  currentCourseCode = course.code;
+    function setCurrentCourse(id) {
+      const card = courseCards.find(c => c.dataset.courseId === id);
+      if (!card) return;
 
-  section.style.display = "block";
-  title.textContent = `${course.code} - ${course.name}`;
-  meta.textContent  = `${course.term} • Instructor: ${course.instructor}`;
+      currentCourseId = id;
+      const name = card.querySelector("h3")?.textContent || "Course";
+      currentCourseLabel.textContent = "Posting to: " + name;
+      renderPosts();
 
-  const isJoined = joinedCourses.includes(course.code);
-  joinBtn.textContent = isJoined ? "Joined" : "Join Course";
-  joinBtn.disabled = isJoined;
-  joinStatus.textContent = isJoined
-    ? "You have already joined this course."
-    : "";
+      postsSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
 
-  postAccessNote.textContent = isJoined
-    ? ""
-    : "Join this course to start posting.";
+    function renderPosts() {
+      postsListEl.innerHTML = "";
 
-  renderPostsForCourse(course.code);
-
-  section.scrollIntoView({ behavior: "smooth", block: "start" });
-}
-
-    function handleSearch() {
-      const input = document.getElementById("courseSearchInput");
-      const msg   = document.getElementById("searchMessage");
-      const query = input.value.trim().toLowerCase();
-
-      if (!query) {
-        msg.textContent = "";
-        renderSearchResults(allCourses);
+      if (!currentCourseId) {
+        const empty = document.createElement("div");
+        empty.className = "post-empty";
+        empty.textContent = "Select a course to view or add posts.";
+        postsListEl.appendChild(empty);
         return;
       }
 
-      const filtered = allCourses.filter((c) => {
-        return (
-          c.code.toLowerCase().includes(query) ||
-          c.name.toLowerCase().includes(query)
-        );
+      const allPosts = getCoursePosts();
+      const postsForCourse = allPosts[currentCourseId] || [];
+
+      if (postsForCourse.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "post-empty";
+        empty.textContent = "No posts yet. Be the first to post!";
+        postsListEl.appendChild(empty);
+        return;
+      }
+
+      postsForCourse.forEach(post => {
+        const item = document.createElement("div");
+        item.className = "post-card";
+
+        const meta = document.createElement("div");
+        meta.className = "post-meta";
+        const date = new Date(post.createdAt);
+        meta.textContent = date.toLocaleString();
+
+        const body = document.createElement("div");
+        body.textContent = post.text;
+
+        item.appendChild(meta);
+        item.appendChild(body);
+        postsListEl.appendChild(item);
+      });
+    }
+
+    function handleNewPostSubmit(event) {
+      event.preventDefault();
+      const text = postTextInput.value.trim();
+      if (!currentCourseId) {
+        alert("Select a course first (click a course or a joined course pill).");
+        return;
+      }
+      if (!text) return;
+
+      const allPosts = getCoursePosts();
+      if (!Array.isArray(allPosts[currentCourseId])) {
+        allPosts[currentCourseId] = [];
+      }
+      allPosts[currentCourseId].push({
+        text,
+        createdAt: new Date().toISOString()
       });
 
-      msg.textContent = `Found ${filtered.length} course(s) matching "${input.value.trim()}"`;
-      renderSearchResults(filtered);
+      setCoursePosts(allPosts);
+      postTextInput.value = "";
+      renderPosts();
     }
 
-    function handleJoinCurrentCourse() {
-      if (!currentCourseCode) return;
+    // --- FILTERING ---
+    function filterCourses() {
+      const q = courseSearch.value.trim().toLowerCase();
+      const term = termFilter.value;
+      const status = statusFilter.value;
+      const joined = getJoinedCourses();
 
-      const code = currentCourseCode;
-      const joinBtn    = document.getElementById("joinCourseButton");
-      const joinStatus = document.getElementById("joinStatus");
-      const postAccessNote = document.getElementById("postAccessNote");
+      courseCards.forEach(card => {
+        const title = (card.querySelector("h3")?.textContent || "").toLowerCase();
+        const desc = (card.querySelector(".course-desc")?.textContent || "").toLowerCase();
+        const courseTerm = card.dataset.term || "";
+        const id = card.dataset.courseId;
+        const isJoined = !!joined[id];
 
-      if (!joinedCourses.includes(code)) {
-        joinedCourses.push(code);
-        saveJoinedCourses();
-      }
+        let visible = true;
 
-      joinBtn.textContent = "Joined";
-      joinBtn.disabled = true;
-      joinStatus.textContent = "You have joined this course.";
-      postAccessNote.textContent = "";
-
-      renderJoinedCourses();
-      handleSearch();
-    }
-
-    function setupPostForm() {
-      const form = document.getElementById("newPostForm");
-      const textarea = document.getElementById("newPostText");
-
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        if (!currentCourseCode) return;
-
-        const content = textarea.value.trim();
-        if (!content) return;
-
-        const now = new Date();
-        const post = {
-          author: "You",
-          content,
-          createdAt: now.toLocaleString()
-        };
-
-        if (!coursePosts[currentCourseCode]) {
-          coursePosts[currentCourseCode] = [];
+        if (q && !title.includes(q) && !desc.includes(q)) {
+          visible = false;
         }
 
-        coursePosts[currentCourseCode].unshift(post);
-        saveCoursePosts();
-        textarea.value = "";
-        renderPostsForCourse(currentCourseCode);
+        if (term && term !== courseTerm) {
+          visible = false;
+        }
+
+        if (status === "joined" && !isJoined) visible = false;
+        if (status === "not-joined" && isJoined) visible = false;
+
+        card.style.display = visible ? "flex" : "none";
       });
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
-      renderSearchResults(allCourses);
-      renderJoinedCourses();
-      setupPostForm();
+    function debounce(fn, wait) {
+      let t;
+      return function (...args) {
+        clearTimeout(t);
+        t = setTimeout(() => fn.apply(this, args), wait);
+      };
+    }
 
-      const searchForm   = document.getElementById("courseSearchForm");
-      const searchInput  = document.getElementById("courseSearchInput");
-      const searchButton = document.getElementById("courseSearchButton");
+    coursesGrid.addEventListener("click", (e) => {
+      const joinBtn = e.target.closest(".join-btn");
+      const previewBtn = e.target.closest(".preview-btn");
+      const card = e.target.closest(".course-card");
 
-      searchForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        handleSearch();
-      });
+      if (!card) return;
 
-      searchButton.addEventListener("click", handleSearch);
+      const id = card.dataset.courseId;
 
-      const joinBtn = document.getElementById("joinCourseButton");
-      joinBtn.addEventListener("click", handleJoinCurrentCourse);
+      if (joinBtn) {
+        const joined = getJoinedCourses();
+        if (joined[id]) {
+          leaveCourseById(id);
+        } else {
+          joinCourse(card);
+          setCurrentCourse(id);
+        }
+      }
+
+      if (previewBtn) {
+        setCurrentCourse(id);
+      }
     });
+
+    joinedListEl.addEventListener("click", (e) => {
+      const pill = e.target.closest(".joined-pill");
+      if (!pill) return;
+
+      const id = pill.dataset.courseId;
+
+      if (e.target.matches(".leave-btn")) {
+        e.stopPropagation();
+        leaveCourseById(id);
+      } else {
+        setCurrentCourse(id);
+      }
+    });
+
+    newPostForm.addEventListener("submit", handleNewPostSubmit);
+
+    courseSearch.addEventListener("input", debounce(filterCourses, 200));
+    termFilter.addEventListener("change", filterCourses);
+    statusFilter.addEventListener("change", filterCourses);
+
+    (function init() {
+      updateJoinButtons();
+      renderJoinedPills();
+      renderPosts();
+      filterCourses();
+    })();
   </script>
 </body>
 </html>
