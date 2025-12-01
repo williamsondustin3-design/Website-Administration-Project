@@ -23,84 +23,113 @@
   </header>
 
   <!-- Filters Bar with Dropdowns -->
-  <div class="filters-bar">
-    <ul>
-      <li class="dropdown">
-        <a href="#">My Courses</a>
-        <ul class="dropdown-content">
-          <li><a href="#">Course 1</a></li>
-          <li><a href="#">Course 2</a></li>
-        </ul>
-      </li>
-      <li class="dropdown">
-        <a href="#">Recent Groups</a>
-        <ul class="dropdown-content">
-          <li><a href="#">Group A</a></li>
-          <li><a href="#">Group B</a></li>
-        </ul>
-      </li>
-      <li class="dropdown">
-        <a href="#">Popular Groups</a>
-        <ul class="dropdown-content">
-          <li><a href="#">Popular 1</a></li>
-          <li><a href="#">Popular 2</a></li>
-        </ul>
-      </li>
-    </ul>
-  </div>
+<div class="filters-bar">
+  <ul>
+    <li class="dropdown">
+      <label for="subjectFilter">Subject:</label>
+      <select id="subjectFilter">
+        <option value="">-- Select Subject --</option>
+        <option value="computer-science">Computer Science</option>
+        <option value="math">Mathematics</option>
+        <option value="english">English</option>
+        <option value="history">History</option>
+      </select>
+    </li>
+    <li class="dropdown">
+      <label for="yearFilter">School Year:</label>
+      <select id="yearFilter">
+        <option value="">-- Select Year --</option>
+        <option value="freshman">Freshmen</option>
+        <option value="sophomore">Sophomores</option>
+        <option value="junior">Juniors</option>
+        <option value="senior">Seniors</option>
+      </select>
+    </li>
+  </ul>
+</div>
 
-  <div class="groups-container">
-    <div class="content">
-      <h2>Groups</h2>
-      <p>Here you can browse or join course discussion groups.</p>
-      <div class="group-card">
-        <h4>Computer Science</h4>
-        <p>For students involved in computer science related classes - Discuss assignments and share ideas.</p>
-        <button>Join Group</button>
-      </div>
-      <div class="group-card">
-        <h4>Mathematics</h4>
-        <p>For students involved in math related classes - Share notes and solve problems together.</p>
-        <button>Join Group</button>
-      </div>
-      <div class="group-card">
-        <h4>English</h4>
-        <p>For students involved in english related classes - Cooperate on class readings and discuss writing assigments.</p>
-        <button>Join Group</button>
-      </div>
-      <div class="group-card">
-        <h4>History</h4>
-        <p>For students involved in history related classes - Contemplate the past and share studying strategies.</p>
-        <button>Join Group</button>
-      </div>
-      <div class="group-card">
-        <h4>Seniors</h4>
-        <p>A broader group for seniors in various classes.</p>
-        <button>Join Group</button>
-      </div>
-      <div class="group-card">
-        <h4>Seniors</h4>
-        <p>A broader group for seniors in various classes and walks of life.</p>
-        <button>Join Group</button>
-      </div>
-      <div class="group-card">
-        <h4>Juniors</h4>
-        <p>A broader group for juniors in various classes and walks of life.</p>
-        <button>Join Group</button>
-      </div>
-      <div class="group-card">
-        <h4>Sophomores</h4>
-        <p>A broader group for sophomores in various classes and walks of life.</p>
-        <button>Join Group</button>
-      </div>
-      <div class="group-card">
-        <h4>Freshmen</h4>
-        <p>A broader group for freshmen in various classes and walks of life.</p>
-        <button>Join Group</button>
-      </div>
+<div class="groups-container">
+  <div class="content">
+    <h2>Groups</h2>
+    <p>Here you can browse or join course discussion groups.</p>
+
+    
+    <div class="group-card" data-subject="computer-science">
+      <h4>Computer Science</h4>
+      <p>For students involved in computer science related classes.</p>
+      <button>Join Group</button>
+    </div>
+
+    <div class="group-card" data-subject="math">
+      <h4>Mathematics</h4>
+      <p>For students involved in math related classes.</p>
+      <button>Join Group</button>
+    </div>
+
+    <div class="group-card" data-subject="english">
+      <h4>English</h4>
+      <p>For students involved in english related classes.</p>
+      <button>Join Group</button>
+    </div>
+
+    <div class="group-card" data-subject="history">
+      <h4>History</h4>
+      <p>For students involved in history related classes.</p>
+      <button>Join Group</button>
+    </div>
+
+    <div class="group-card" data-year="senior">
+      <h4>Seniors</h4>
+      <p>A broader group for seniors.</p>
+      <button>Join Group</button>
+    </div>
+
+    <div class="group-card" data-year="junior">
+      <h4>Juniors</h4>
+      <p>A broader group for juniors.</p>
+      <button>Join Group</button>
+    </div>
+
+    <div class="group-card" data-year="sophomore">
+      <h4>Sophomores</h4>
+      <p>A broader group for sophomores.</p>
+      <button>Join Group</button>
+    </div>
+
+    <div class="group-card" data-year="freshman">
+      <h4>Freshmen</h4>
+      <p>A broader group for freshmen.</p>
+      <button>Join Group</button>
     </div>
   </div>
+</div>
+
+<script>
+  const subjectFilter = document.getElementById("subjectFilter");
+  const yearFilter = document.getElementById("yearFilter");
+  const groupCards = document.querySelectorAll(".group-card");
+
+  function filterGroups() {
+    const subjectValue = subjectFilter.value;
+    const yearValue = yearFilter.value;
+
+    groupCards.forEach(card => {
+      const matchesSubject = subjectValue ? card.dataset.subject === subjectValue : true;
+      const matchesYear = yearValue ? card.dataset.year === yearValue : true;
+
+      if (matchesSubject && matchesYear) {
+        card.style.display = "block";
+      } else {
+        card.style.display = "none";
+      }
+    });
+  }
+
+  subjectFilter.addEventListener("change", filterGroups);
+  yearFilter.addEventListener("change", filterGroups);
+</script>
 </body>
 </html>
+
 
 
