@@ -209,6 +209,66 @@ main p {
 }
 
 
+/* ---------- FILTERS BAR ---------- */
+.filters-bar {
+  background-color: darkgreen;
+  padding: 10px 0;
+}
+
+.filters-bar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+.filters-bar li {
+  position: relative;
+}
+
+.filters-bar a {
+  text-decoration: none;
+  color: gold;
+  font-weight: bold;
+  padding: 8px 12px;
+  border-radius: 6px;
+  display: block;
+  transition: background 0.3s, color 0.3s;
+}
+
+.filters-bar a:hover {
+  background-color: gold;
+  color: darkgreen;
+}
+
+/* Dropdown menu */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: darkgreen;
+  min-width: 150px;
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  z-index: 10;
+}
+
+.dropdown-content li a {
+  padding: 10px 15px;
+  color: gold;
+}
+
+.dropdown-content li a:hover {
+  background-color: gold;
+  color: darkgreen;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
 
 
 
