@@ -22,16 +22,34 @@
     </nav>
   </header>
 
-  <div class="groups-container">
-    <aside class="sidebar">
-      <h3>Filters</h3>
-      <ul>
-        <li><a href="#">My Courses</a></li>
-        <li><a href="#">Recent Groups</a></li>
-        <li><a href="#">Popular Groups</a></li>
-      </ul>
-    </aside>
+  <!-- Filters Bar with Dropdowns -->
+  <div class="filters-bar">
+    <ul>
+      <li class="dropdown">
+        <a href="#">My Courses</a>
+        <ul class="dropdown-content">
+          <li><a href="#">Course 1</a></li>
+          <li><a href="#">Course 2</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a href="#">Recent Groups</a>
+        <ul class="dropdown-content">
+          <li><a href="#">Group A</a></li>
+          <li><a href="#">Group B</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a href="#">Popular Groups</a>
+        <ul class="dropdown-content">
+          <li><a href="#">Popular 1</a></li>
+          <li><a href="#">Popular 2</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
 
+  <div class="groups-container">
     <div class="content">
       <h2>Groups</h2>
       <p>Here you can browse or join course discussion groups.</p>
@@ -40,8 +58,12 @@
         <p>Intro to Programming - Discuss assignments and share ideas.</p>
         <button>Join Group</button>
       </div>
+      <div class="group-card">
+        <h4>Mathematics 201</h4>
+        <p>Advanced Calculus - Share notes and solve problems together.</p>
+        <button>Join Group</button>
+      </div>
     </div>
   </div>
 </body>
-
 </html>
