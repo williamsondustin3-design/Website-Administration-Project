@@ -245,18 +245,19 @@ main p {
 
 /* ---------- DROPDOWN MENU ---------- */
 .filters-bar .dropdown-content {
-  opacity: 0;                    /* Hidden by default */
-  visibility: hidden;            /* Prevent interaction when hidden */
+  opacity: 0;
+  visibility: hidden;
   position: absolute;
-  top: 100%;                     /* Right below parent link */
+  top: 100%;                   /* Position below parent */
   left: 0;
   background-color: darkgreen;
   min-width: 150px;
   border-radius: 6px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
   transition: opacity 0.3s ease, transform 0.3s ease;
-  transform: translateY(10px);  /* Slight drop effect */
+  transform: translateY(10px);
   z-index: 10;
+  display: block;               /* Keep vertical stack */
 }
 
 .filters-bar .dropdown-content li a {
@@ -276,3 +277,4 @@ main p {
   visibility: visible;
   transform: translateY(0);     /* Move into place */
 }
+
