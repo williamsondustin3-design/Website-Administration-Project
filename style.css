@@ -9,7 +9,7 @@ header {
   align-items: center;
   justify-content: space-between;
   background-color: white;
-  border-color: darkgreen;
+  border: 2px solid darkgreen;
   padding: 15px 40px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
@@ -207,6 +207,7 @@ main p {
 .course-form button:hover {
   background-color: darkgreen;
 }
+
 
 
 
