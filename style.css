@@ -91,10 +91,10 @@ main p {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: green;
+  background-color: white;
   padding: 30px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
+  border: 8px solid darkgreen;
   z-index: 10;
 }
 
@@ -207,6 +207,7 @@ main p {
 .course-form button:hover {
   background-color: darkgreen;
 }
+
 
 
 
