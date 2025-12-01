@@ -84,35 +84,35 @@
 
 <script>
   const allCourses = [
-    {
-      code: "CIS350",
-      name: "Data Structures",
-      term: "Fall 2025",
-      instructor: "Dr. Smith",
-      description: "Core concepts of data structures including lists, stacks, queues, and trees."
-    },
-    {
-      code: "CIS340",
-      name: "Web Development",
-      term: "Fall 2025",
-      instructor: "Prof. Johnson",
-      description: "HTML, CSS, JavaScript, and front-end app design."
-    },
-    {
-      code: "MATH110",
-      name: "College Algebra",
-      term: "Fall 2025",
-      instructor: "Dr. Lee",
-      description: "Functions, graphs, and algebraic problem solving."
-    },
-    {
-      code: "ENG101",
-      name: "English Composition",
-      term: "Fall 2025",
-      instructor: "Dr. Brown",
-      description: "Academic writing, argumentation, and research skills."
-    }
+    { code: "CIS350", name: "Data Structures", term: "Fall 2025", instructor: "Dr. Smith",
+      description: "Core concepts of data structures including lists, stacks, queues, and trees." },
+    { code: "CIS340", name: "Web Development", term: "Fall 2025", instructor: "Prof. Johnson",
+      description: "HTML, CSS, JavaScript, and front-end app design." },
+    { code: "MATH110", name: "College Algebra", term: "Fall 2025", instructor: "Dr. Lee",
+      description: "Functions, graphs, and algebraic problem solving." },
+    { code: "ENG101", name: "English Composition", term: "Fall 2025", instructor: "Dr. Brown",
+      description: "Academic writing, argumentation, and research skills." }
   ];
+
+  const STORAGE_JOINED = "classconnect_joinedCourses";
+
+  let joinedCourses = loadJoinedCourses();
+  let currentCourseCode = null;
+
+  function loadJoinedCourses() {
+    const saved = localStorage.getItem(STORAGE_JOINED);
+    if (!saved) return [];
+    try {
+      return JSON.parse(saved);
+    } catch (e) {
+      console.error("Error parsing joined courses:", e);
+      return [];
+    }
+  }
+
+  function saveJoinedCourses() {
+    localStorage.setItem(STORAGE_JOINED, JSON.stringify(joinedCourses));
+  }
 
   function escapeHtml(str) {
     return String(str)
@@ -133,6 +133,7 @@
 
     container.innerHTML = courses
       .map((c) => {
+        const joined = joinedCourses.includes(c.code);
         return `
           <article class="course-card">
             <h4>${escapeHtml(c.code)} - ${escapeHtml(c.name)}</h4>
@@ -145,6 +146,7 @@
             >
               View Course
             </button>
+            ${joined ? '<span class="badge">Joined</span>' : ""}
           </article>
         `;
       })
@@ -157,6 +159,74 @@
         showCourseDetail(code);
       });
     });
+  }
+
+  function renderJoinedCourses() {
+    const container = document.getElementById("joinedCourses");
+
+    if (!joinedCourses || joinedCourses.length === 0) {
+      container.innerHTML = "<p>You haven't joined any courses yet.</p>";
+      return;
+    }
+
+    const joinedDetails = joinedCourses
+      .map((code) => allCourses.find((c) => c.code === code))
+      .filter(Boolean);
+
+    container.innerHTML = `
+      <ul class="joined-courses-list">
+        ${joinedDetails
+          .map(
+            (c) => `
+              <li>
+                <button
+                  type="button"
+                  class="joined-course-btn"
+                  data-code="${escapeHtml(c.code)}"
+                >
+                  ${escapeHtml(c.code)} - ${escapeHtml(c.name)}
+                </button>
+              </li>
+            `
+          )
+          .join("")}
+      </ul>
+    `;
+
+    const buttons = container.querySelectorAll(".joined-course-btn");
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const code = btn.getAttribute("data-code");
+        showCourseDetail(code);
+      });
+    });
+  }
+
+  function showCourseDetail(code) {
+    const course = allCourses.find((c) => c.code === code);
+    const section = document.getElementById("courseDetailSection");
+    const title   = document.getElementById("courseTitle");
+    const meta    = document.getElementById("courseMeta");
+    const joinBtn = document.getElementById("joinCourseButton");
+    const joinStatus = document.getElementById("joinStatus");
+
+    if (!course) {
+      section.style.display = "none";
+      return;
+    }
+
+    currentCourseCode = course.code;
+
+    section.style.display = "block";
+    title.textContent = `${course.code} - ${course.name}`;
+    meta.textContent  = `${course.term} • Instructor: ${course.instructor}`;
+
+    const isJoined = joinedCourses.includes(course.code);
+    joinBtn.textContent = isJoined ? "Joined" : "Join Course";
+    joinBtn.disabled = isJoined;
+    joinStatus.textContent = isJoined
+      ? "You have already joined this course."
+      : "";
   }
 
   function handleSearch() {
@@ -181,24 +251,30 @@
     renderSearchResults(filtered);
   }
 
-  function showCourseDetail(code) {
-    const course = allCourses.find((c) => c.code === code);
-    const section = document.getElementById("courseDetailSection");
-    const title   = document.getElementById("courseTitle");
-    const meta    = document.getElementById("courseMeta");
+  function handleJoinCurrentCourse() {
+    if (!currentCourseCode) return;
 
-    if (!course) {
-      section.style.display = "none";
-      return;
+    const code = currentCourseCode;
+    const joinBtn    = document.getElementById("joinCourseButton");
+    const joinStatus = document.getElementById("joinStatus");
+
+    if (!joinedCourses.includes(code)) {
+      joinedCourses.push(code);
+      saveJoinedCourses();
     }
 
-    section.style.display = "block";
-    title.textContent = `${course.code} - ${course.name}`;
-    meta.textContent  = `${course.term} • Instructor: ${course.instructor}`;
+    joinBtn.textContent = "Joined";
+    joinBtn.disabled = true;
+    joinStatus.textContent = "You have joined this course.";
+
+    renderJoinedCourses();
+    handleSearch();
   }
 
   document.addEventListener("DOMContentLoaded", () => {
     renderSearchResults(allCourses);
+    renderJoinedCourses();
+
     const searchInput  = document.getElementById("courseSearchInput");
     const searchButton = document.getElementById("courseSearchButton");
     searchButton.addEventListener("click", handleSearch);
@@ -207,10 +283,14 @@
         handleSearch();
       }
     });
+
+    const joinBtn = document.getElementById("joinCourseButton");
+    joinBtn.addEventListener("click", handleJoinCurrentCourse);
   });
 </script>
 </body>
 </html>
+
 
 
 
