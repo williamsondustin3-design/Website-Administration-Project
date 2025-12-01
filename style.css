@@ -212,7 +212,7 @@ main p {
 /* ---------- FILTERS BAR ---------- */
 .filters-bar {
   background-color: darkgreen;
-  padding: 10px 0;
+  padding: 5px 0;
 }
 
 .filters-bar ul {
@@ -244,37 +244,35 @@ main p {
 }
 
 /* ---------- DROPDOWN MENU ---------- */
-.dropdown-content {
-  display: none;            /* Hidden by default */
+.filters-bar .dropdown-content {
+  opacity: 0;                    /* Hidden by default */
+  visibility: hidden;            /* Prevent interaction when hidden */
   position: absolute;
-  top: 100%;
+  top: 100%;                     /* Right below parent link */
   left: 0;
   background-color: darkgreen;
   min-width: 150px;
   border-radius: 6px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: translateY(10px);  /* Slight drop effect */
   z-index: 10;
 }
 
-.dropdown-content li a {
+.filters-bar .dropdown-content li a {
   padding: 10px 15px;
   color: gold;
   display: block;
 }
 
-.dropdown-content li a:hover {
+.filters-bar .dropdown-content li a:hover {
   background-color: gold;
   color: darkgreen;
 }
 
-/* Show dropdown only on hover of parent */
-.dropdown:hover .dropdown-content {
-  display: block;
+/* Show dropdown only on hover of the parent li */
+.filters-bar li.dropdown:hover > .dropdown-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);     /* Move into place */
 }
-
-
-
-
-
-
-
