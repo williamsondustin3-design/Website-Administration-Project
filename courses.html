@@ -95,8 +95,10 @@
   ];
 
   const STORAGE_JOINED = "classconnect_joinedCourses";
+  const STORAGE_POSTS  = "classconnect_coursePosts";
 
   let joinedCourses = loadJoinedCourses();
+  let coursePosts   = loadCoursePosts();
   let currentCourseCode = null;
 
   function loadJoinedCourses() {
@@ -112,6 +114,21 @@
 
   function saveJoinedCourses() {
     localStorage.setItem(STORAGE_JOINED, JSON.stringify(joinedCourses));
+  }
+
+  function loadCoursePosts() {
+    const saved = localStorage.getItem(STORAGE_POSTS);
+    if (!saved) return {};
+    try {
+      return JSON.parse(saved);
+    } catch (e) {
+      console.error("Error parsing course posts:", e);
+      return {};
+    }
+  }
+
+  function saveCoursePosts() {
+    localStorage.setItem(STORAGE_POSTS, JSON.stringify(coursePosts));
   }
 
   function escapeHtml(str) {
@@ -202,6 +219,30 @@
     });
   }
 
+  function renderPostsForCourse(code) {
+    const container = document.getElementById("postsList");
+    const posts = coursePosts[code] || [];
+
+    if (posts.length === 0) {
+      container.innerHTML = "<p>No posts yet. Be the first to share something!</p>";
+      return;
+    }
+
+    container.innerHTML = posts
+      .map((p) => {
+        return `
+          <article class="post">
+            <header>
+              <strong>${escapeHtml(p.author || "Anonymous")}</strong>
+              <span class="date">${escapeHtml(p.createdAt || "")}</span>
+            </header>
+            <p>${escapeHtml(p.content)}</p>
+          </article>
+        `;
+      })
+      .join("");
+  }
+
   function showCourseDetail(code) {
     const course = allCourses.find((c) => c.code === code);
     const section = document.getElementById("courseDetailSection");
@@ -227,6 +268,8 @@
     joinStatus.textContent = isJoined
       ? "You have already joined this course."
       : "";
+
+    renderPostsForCourse(course.code);
   }
 
   function handleSearch() {
@@ -271,9 +314,39 @@
     handleSearch();
   }
 
+  function setupPostForm() {
+    const form = document.getElementById("newPostForm");
+    const textarea = document.getElementById("newPostText");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (!currentCourseCode) return;
+
+      const content = textarea.value.trim();
+      if (!content) return;
+
+      const now = new Date();
+      const post = {
+        author: "You",
+        content,
+        createdAt: now.toLocaleString()
+      };
+
+      if (!coursePosts[currentCourseCode]) {
+        coursePosts[currentCourseCode] = [];
+      }
+
+      coursePosts[currentCourseCode].unshift(post);
+      saveCoursePosts();
+      textarea.value = "";
+      renderPostsForCourse(currentCourseCode);
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
     renderSearchResults(allCourses);
     renderJoinedCourses();
+    setupPostForm();
 
     const searchInput  = document.getElementById("courseSearchInput");
     const searchButton = document.getElementById("courseSearchButton");
@@ -290,8 +363,3 @@
 </script>
 </body>
 </html>
-
-
-
-
-
