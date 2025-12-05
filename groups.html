@@ -5,155 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Groups - ClassConnect</title>
 
-  <!-- Keep project stylesheet, but include important local styles for layout & accessibility improvements -->
   <link rel="stylesheet" href="style.css" />
-  <style>
-    :root{
-      --accent:#2a9d8f;
-      --muted:#6b7280;
-      --bg:#f7fafc;
-      --card:#ffffff;
-      --radius:8px;
-      --gap:16px;
-    }
-
-    body{
-      margin:0;
-      font-family:system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background:var(--bg);
-      color:#111827;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-    }
-
-    header{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      background:linear-gradient(90deg, #0f172a 0%, #1f2937 100%);
-      color:#fff;
-      padding:12px 20px;
-    }
-    .logo-container{
-      display:flex;
-      gap:12px;
-      align-items:center;
-    }
-    .logo-container img{ width:44px; height:44px; object-fit:cover; border-radius:6px; }
-    header h1{ font-size:1.2rem; margin:0; }
-
-    nav ul{
-      list-style:none;
-      display:flex;
-      gap:12px;
-      margin:0;
-      padding:0;
-      align-items:center;
-    }
-    nav a{
-      color:rgba(255,255,255,0.9);
-      text-decoration:none;
-      padding:8px 10px;
-      border-radius:6px;
-    }
-    nav a.active, nav a:hover{ background:rgba(255,255,255,0.06); }
-
-    main{
-      max-width:1100px;
-      margin:20px auto;
-      padding:0 16px 80px;
-    }
-
-    .controls{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      align-items:center;
-      margin-bottom:18px;
-    }
-
-    .filters-bar{
-      display:flex;
-      gap:8px;
-      align-items:center;
-      background:var(--card);
-      padding:12px;
-      border-radius:var(--radius);
-      box-shadow:0 1px 4px rgba(2,6,23,0.06);
-    }
-
-    .filters-bar label{ font-size:0.9rem; color:var(--muted); margin-right:6px; }
-    select, input[type="search"], button{
-      padding:8px 10px;
-      border:1px solid #e6e9ee;
-      border-radius:6px;
-      background: #fff;
-      font-size:0.95rem;
-    }
-
-    .sub-filters{ display:flex; gap:8px; align-items:center; }
-
-    .groups-container .content{
-      margin-top:12px;
-      background:transparent;
-    }
-
-    .groups-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
-      gap:16px;
-      margin-top:12px;
-    }
-
-    .group-card{
-      background:var(--card);
-      border-radius:10px;
-      padding:14px;
-      box-shadow:0 6px 12px rgba(2,6,23,0.06);
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      min-height:120px;
-    }
-    .group-card h4{ margin:0; font-size:1.05rem; }
-    .group-meta{ font-size:0.85rem; color:var(--muted); display:flex; gap:8px; flex-wrap:wrap;}
-    .group-actions{ margin-top:auto; display:flex; gap:8px; align-items:center; }
-    .join-btn{
-      background:var(--accent);
-      color:#fff;
-      border:none;
-      padding:8px 10px;
-      border-radius:8px;
-      cursor:pointer;
-    }
-    .join-btn[aria-pressed="true"]{ background:#0b6a5c; }
-    .secondary-btn{
-      background:transparent;
-      border:1px solid #e6e9ee;
-      color:#111827;
-      padding:8px 10px;
-      border-radius:8px;
-      cursor:pointer;
-    }
-
-    .no-results{
-      padding:18px;
-      text-align:center;
-      color:var(--muted);
-      background:var(--card);
-      border-radius:8px;
-      margin-top:12px;
-    }
-
-    /* small helper for hidden elements toggling via JS */
-    .hidden{ display:none !important; }
-
-    /* responsive tweaks */
-    @media (max-width:520px){
-      .filters-bar{ flex-direction:column; align-items:stretch; }
-      nav ul{ display:none; }
-    }
-  </style>
 </head>
 <body>
   <header>
@@ -161,7 +13,7 @@
       <img src="download.png" alt="ClassConnect Logo">
       <div>
         <h1>ClassConnect</h1>
-        <div style="font-size:0.85rem; color:rgba(255,255,255,0.8)">Groups & communities</div>
+        <div style="font-size:0.85rem; color:rgba(255,255,255,0.8)">Groups &amp; communities</div>
       </div>
     </div>
 
@@ -175,12 +27,12 @@
     </nav>
   </header>
 
-  <main>
-    <section class="controls" aria-labelledby="filters-heading">
-      <h2 id="filters-heading" class="hidden">Group filters</h2>
+  <main class="courses-page">
+    <section class="course-search" aria-labelledby="filters-heading">
+      <h2 id="filters-heading" class="sr-only">Group filters</h2>
 
-      <div class="filters-bar" role="region" aria-label="Group filters">
-        <label for="categorySelect">Category</label>
+      <div class="course-search-bar" role="region" aria-label="Group filters">
+        <label for="categorySelect" style="font-size:0.9rem;">Category</label>
         <select id="categorySelect" aria-controls="subFilters" aria-describedby="category-help">
           <option value="">All</option>
           <option value="subject">Subject</option>
@@ -188,9 +40,8 @@
           <option value="interest">Interests</option>
         </select>
 
-        <div id="subFilters" class="sub-filters" aria-live="polite">
-          <!-- Sub-dropdowns: they will show/hide depending on category. include default empty option to mean 'any' -->
-          <div id="subjectOptions" class="hidden">
+        <div id="subFilters" aria-live="polite">
+          <div id="subjectOptions" hidden>
             <label for="subjectSelect" class="sr-only">Subject</label>
             <select id="subjectSelect">
               <option value="">Any subject</option>
@@ -201,7 +52,7 @@
             </select>
           </div>
 
-          <div id="yearOptions" class="hidden">
+          <div id="yearOptions" hidden>
             <label for="yearSelect" class="sr-only">School year</label>
             <select id="yearSelect">
               <option value="">Any year</option>
@@ -212,7 +63,7 @@
             </select>
           </div>
 
-          <div id="interestOptions" class="hidden">
+          <div id="interestOptions" hidden>
             <label for="interestSelect" class="sr-only">Interest</label>
             <select id="interestSelect">
               <option value="">Any interest</option>
@@ -225,7 +76,12 @@
         </div>
 
         <label for="groupSearch" class="sr-only">Search groups</label>
-        <input id="groupSearch" type="search" placeholder="Search groups..." aria-label="Search groups by name or description">
+        <input
+          id="groupSearch"
+          type="search"
+          placeholder="Search groups..."
+          aria-label="Search groups by name or description"
+        >
 
         <button id="resetFilters" class="secondary-btn" title="Reset filters">Reset</button>
       </div>
@@ -236,165 +92,205 @@
         <h2 id="groups-heading">Groups</h2>
         <p>Browse and join student groups. Use the filters or search to find groups that match your interests.</p>
 
-        <div id="groupsGrid" class="groups-grid" role="list">
-          <!-- Example group cards with data attributes. Each card has a data-id for join persistence -->
-          <article class="group-card" role="listitem" data-id="g1" data-subject="computer-science" data-year="freshman" data-interest="coding">
-            <h4>Intro to Computer Science</h4>
-            <div class="group-meta">Subject: Computer Science • Year: Freshmen • Interest: Coding</div>
-            <p>Study group for the introductory CS course. Share resources and ask questions.</p>
-            <div class="group-actions">
-              <button class="join-btn" aria-pressed="false">Join Group</button>
+        <div id="groupsGrid" class="courses-grid" role="list">
+          <article class="course-card" role="listitem"
+                   data-id="g1"
+                   data-subject="computer-science"
+                   data-year="freshman"
+                   data-interest="coding">
+            <h3>Intro to Computer Science</h3>
+            <div class="course-meta">
+              Subject: Computer Science • Year: Freshmen • Interest: Coding
+            </div>
+            <p class="course-desc">
+              Study group for the introductory CS course. Share resources and ask questions.
+            </p>
+            <div class="course-actions">
+              <button class="primary-btn join-btn" aria-pressed="false">Join Group</button>
               <button class="secondary-btn" data-action="preview">Preview</button>
             </div>
           </article>
 
-          <article class="group-card" role="listitem" data-id="g2" data-subject="math" data-year="senior" data-interest="">
-            <h4>Senior Math Circle</h4>
-            <div class="group-meta">Subject: Mathematics • Year: Seniors</div>
-            <p>Advanced problem-solving and exam prep for senior math students.</p>
-            <div class="group-actions">
-              <button class="join-btn" aria-pressed="false">Join Group</button>
+          <article class="course-card" role="listitem"
+                   data-id="g2"
+                   data-subject="math"
+                   data-year="senior"
+                   data-interest="">
+            <h3>Senior Math Circle</h3>
+            <div class="course-meta">
+              Subject: Mathematics • Year: Seniors
+            </div>
+            <p class="course-desc">
+              Advanced problem-solving and exam prep for senior math students.
+            </p>
+            <div class="course-actions">
+              <button class="primary-btn join-btn" aria-pressed="false">Join Group</button>
               <button class="secondary-btn" data-action="preview">Preview</button>
             </div>
           </article>
 
-          <article class="group-card" role="listitem" data-id="g3" data-subject="english" data-year="junior" data-interest="debate">
-            <h4>Debate & Rhetoric</h4>
-            <div class="group-meta">Subject: English • Year: Juniors • Interest: Debate</div>
-            <p>Practice debating skills and speech-writing with peers.</p>
-            <div class="group-actions">
-              <button class="join-btn" aria-pressed="false">Join Group</button>
+          <article class="course-card" role="listitem"
+                   data-id="g3"
+                   data-subject="english"
+                   data-year="junior"
+                   data-interest="debate">
+            <h3>Debate &amp; Rhetoric</h3>
+            <div class="course-meta">
+              Subject: English • Year: Juniors • Interest: Debate
+            </div>
+            <p class="course-desc">
+              Practice debating skills and speech-writing with peers.
+            </p>
+            <div class="course-actions">
+              <button class="primary-btn join-btn" aria-pressed="false">Join Group</button>
               <button class="secondary-btn" data-action="preview">Preview</button>
             </div>
           </article>
 
-          <article class="group-card" role="listitem" data-id="g4" data-subject="" data-year="senior" data-interest="sports">
-            <h4>Sports Enthusiasts</h4>
-            <div class="group-meta">Year: Seniors • Interest: Sports</div>
-            <p>Organize pickup games and discuss athletics and fitness.</p>
-            <div class="group-actions">
-              <button class="join-btn" aria-pressed="false">Join Group</button>
+          <article class="course-card" role="listitem"
+                   data-id="g4"
+                   data-subject=""
+                   data-year="senior"
+                   data-interest="sports">
+            <h3>Sports Enthusiasts</h3>
+            <div class="course-meta">
+              Year: Seniors • Interest: Sports
+            </div>
+            <p class="course-desc">
+              Organize pickup games and discuss athletics and fitness.
+            </p>
+            <div class="course-actions">
+              <button class="primary-btn join-btn" aria-pressed="false">Join Group</button>
               <button class="secondary-btn" data-action="preview">Preview</button>
             </div>
           </article>
 
-          <article class="group-card" role="listitem" data-id="g5" data-subject="computer-science" data-year="junior" data-interest="coding">
-            <h4>Project Partners — CS</h4>
-            <div class="group-meta">Subject: Computer Science • Year: Juniors • Interest: Coding</div>
-            <p>Find teammates for projects, code reviews and pair programming.</p>
-            <div class="group-actions">
-              <button class="join-btn" aria-pressed="false">Join Group</button>
+          <article class="course-card" role="listitem"
+                   data-id="g5"
+                   data-subject="computer-science"
+                   data-year="junior"
+                   data-interest="coding">
+            <h3>Project Partners — CS</h3>
+            <div class="course-meta">
+              Subject: Computer Science • Year: Juniors • Interest: Coding
+            </div>
+            <p class="course-desc">
+              Find teammates for projects, code reviews and pair programming.
+            </p>
+            <div class="course-actions">
+              <button class="primary-btn join-btn" aria-pressed="false">Join Group</button>
               <button class="secondary-btn" data-action="preview">Preview</button>
             </div>
           </article>
         </div>
 
-        <div id="noResults" class="no-results hidden" role="status" aria-live="polite">No groups match your filters.</div>
+        <div
+          id="noResults"
+          class="post-empty"
+          role="status"
+          aria-live="polite"
+          hidden
+        >
+          No groups match your filters.
+        </div>
       </div>
     </section>
   </main>
 
   <script>
-    // Elements
-    const categorySelect = document.getElementById("categorySelect");
-    const subjectOptions = document.getElementById("subjectOptions");
-    const yearOptions = document.getElementById("yearOptions");
-    const interestOptions = document.getElementById("interestOptions");
+    const categorySelect   = document.getElementById("categorySelect");
+    const subjectOptions   = document.getElementById("subjectOptions");
+    const yearOptions      = document.getElementById("yearOptions");
+    const interestOptions  = document.getElementById("interestOptions");
 
-    const subjectSelect = document.getElementById("subjectSelect");
-    const yearSelect = document.getElementById("yearSelect");
-    const interestSelect = document.getElementById("interestSelect");
+    const subjectSelect    = document.getElementById("subjectSelect");
+    const yearSelect       = document.getElementById("yearSelect");
+    const interestSelect   = document.getElementById("interestSelect");
 
-    const groupSearch = document.getElementById("groupSearch");
-    const resetFilters = document.getElementById("resetFilters");
-    const groupsGrid = document.getElementById("groupsGrid");
-    const groupCards = Array.from(document.querySelectorAll('.group-card'));
-    const noResults = document.getElementById('noResults');
+    const groupSearch      = document.getElementById("groupSearch");
+    const resetFilters     = document.getElementById("resetFilters");
+    const groupsGrid       = document.getElementById("groupsGrid");
+    const groupCards       = Array.from(document.querySelectorAll(".course-card"));
+    const noResults        = document.getElementById("noResults");
 
-    // Utility: show/hide sub filters based on category
     function updateSubFilterVisibility() {
       const val = categorySelect.value;
-      subjectOptions.classList.add('hidden');
-      yearOptions.classList.add('hidden');
-      interestOptions.classList.add('hidden');
 
-      if (val === 'subject') subjectOptions.classList.remove('hidden');
-      else if (val === 'year') yearOptions.classList.remove('hidden');
-      else if (val === 'interest') interestOptions.classList.remove('hidden');
+      subjectOptions.hidden  = true;
+      yearOptions.hidden     = true;
+      interestOptions.hidden = true;
+
+      if (val === "subject") {
+        subjectOptions.hidden = false;
+      } else if (val === "year") {
+        yearOptions.hidden = false;
+      } else if (val === "interest") {
+        interestOptions.hidden = false;
+      }
     }
 
-    // Filtering logic: category + sub-select + search
     function filterGroups() {
-      const cat = categorySelect.value;
-      const subject = subjectSelect.value;
-      const year = yearSelect.value;
+      const cat      = categorySelect.value;
+      const subject  = subjectSelect.value;
+      const year     = yearSelect.value;
       const interest = interestSelect.value;
-      const q = groupSearch.value.trim().toLowerCase();
+      const q        = groupSearch.value.trim().toLowerCase();
 
       let visibleCount = 0;
 
       groupCards.forEach(card => {
         let keep = true;
 
-        // apply category constraint if selected
-        if (cat === 'subject' && subject) {
+        if (cat === "subject" && subject) {
           keep = card.dataset.subject === subject;
-        } else if (cat === 'year' && year) {
+        } else if (cat === "year" && year) {
           keep = card.dataset.year === year;
-        } else if (cat === 'interest' && interest) {
+        } else if (cat === "interest" && interest) {
           keep = card.dataset.interest === interest;
         }
 
-        // search filter (name or description)
         if (keep && q) {
-          const title = (card.querySelector('h4')?.textContent || '').toLowerCase();
-          const desc = (card.querySelector('p')?.textContent || '').toLowerCase();
+          const title = (card.querySelector("h3")?.textContent || "").toLowerCase();
+          const desc  = (card.querySelector("p")?.textContent  || "").toLowerCase();
           keep = title.includes(q) || desc.includes(q);
         }
 
-        // apply final visibility
-        if (keep) {
-          card.classList.remove('hidden');
-          visibleCount++;
-        } else {
-          card.classList.add('hidden');
-        }
+        card.hidden = !keep;
+        if (keep) visibleCount++;
       });
 
-      // show 'no results' message when nothing matches
-      if (visibleCount === 0) {
-        noResults.classList.remove('hidden');
-      } else {
-        noResults.classList.add('hidden');
-      }
+      noResults.hidden = visibleCount !== 0;
     }
 
-    // Reset filters to defaults
     function resetAllFilters() {
-      categorySelect.value = '';
-      subjectSelect.value = '';
-      yearSelect.value = '';
-      interestSelect.value = '';
-      groupSearch.value = '';
+      categorySelect.value  = "";
+      subjectSelect.value   = "";
+      yearSelect.value      = "";
+      interestSelect.value  = "";
+      groupSearch.value     = "";
       updateSubFilterVisibility();
       filterGroups();
     }
 
-    // Join button behavior with localStorage persistence
     function loadJoinedState() {
       let joined = {};
       try {
-        joined = JSON.parse(localStorage.getItem('joinedGroups') || '{}');
-      } catch(e) { joined = {}; }
+        joined = JSON.parse(localStorage.getItem("joinedGroups") || "{}");
+      } catch (e) {
+        joined = {};
+      }
+
       groupCards.forEach(card => {
-        const id = card.dataset.id;
-        const btn = card.querySelector('.join-btn');
+        const id  = card.dataset.id;
+        const btn = card.querySelector(".join-btn");
+        if (!btn) return;
+
         if (joined[id]) {
-          btn.textContent = 'Joined';
-          btn.setAttribute('aria-pressed', 'true');
+          btn.textContent = "Joined";
+          btn.setAttribute("aria-pressed", "true");
         } else {
-          btn.textContent = 'Join Group';
-          btn.setAttribute('aria-pressed', 'false');
+          btn.textContent = "Join Group";
+          btn.setAttribute("aria-pressed", "false");
         }
       });
     }
@@ -403,74 +299,65 @@
       const id = card.dataset.id;
       let joined = {};
       try {
-        joined = JSON.parse(localStorage.getItem('joinedGroups') || '{}');
-      } catch(e) { joined = {}; }
-
-      const isJoined = btn.getAttribute('aria-pressed') === 'true';
-      if (isJoined) {
-        // leave group
-        delete joined[id];
-        btn.textContent = 'Join Group';
-        btn.setAttribute('aria-pressed', 'false');
-      } else {
-        // join group
-        joined[id] = { joinedAt: new Date().toISOString() };
-        btn.textContent = 'Joined';
-        btn.setAttribute('aria-pressed', 'true');
+        joined = JSON.parse(localStorage.getItem("joinedGroups") || "{}");
+      } catch (e) {
+        joined = {};
       }
-      localStorage.setItem('joinedGroups', JSON.stringify(joined));
+
+      const isJoined = btn.getAttribute("aria-pressed") === "true";
+      if (isJoined) {
+        delete joined[id];
+        btn.textContent = "Join Group";
+        btn.setAttribute("aria-pressed", "false");
+      } else {
+        joined[id] = { joinedAt: new Date().toISOString() };
+        btn.textContent = "Joined";
+        btn.setAttribute("aria-pressed", "true");
+      }
+
+      localStorage.setItem("joinedGroups", JSON.stringify(joined));
     }
 
-    // Event wiring
-    categorySelect.addEventListener('change', () => {
+    function debounce(fn, wait) {
+      let t;
+      return function (...args) {
+        clearTimeout(t);
+        t = setTimeout(() => fn.apply(this, args), wait);
+      };
+    }
+
+    categorySelect.addEventListener("change", () => {
       updateSubFilterVisibility();
       filterGroups();
     });
 
     [subjectSelect, yearSelect, interestSelect].forEach(el => {
-      el.addEventListener('change', filterGroups);
+      el.addEventListener("change", filterGroups);
     });
 
-    groupSearch.addEventListener('input', debounce(filterGroups, 220));
+    groupSearch.addEventListener("input", debounce(filterGroups, 220));
 
-    resetFilters.addEventListener('click', resetAllFilters);
+    resetFilters.addEventListener("click", resetAllFilters);
 
-    // Attach join button handlers
-    groupsGrid.addEventListener('click', (e) => {
-      const btn = e.target.closest('.join-btn');
-      if (btn) {
-        const card = btn.closest('.group-card');
-        toggleJoin(btn, card);
+    groupsGrid.addEventListener("click", (e) => {
+      const joinBtn = e.target.closest(".join-btn");
+      if (joinBtn) {
+        const card = joinBtn.closest(".course-card");
+        toggleJoin(joinBtn, card);
       }
-      // preview button example (non-blocking)
-      const previewBtn = e.target.closest('button[data-action="preview"]');
+
+      const previewBtn = e.target.closest("button[data-action='preview']");
       if (previewBtn) {
-        const card = previewBtn.closest('.group-card');
-        const title = card.querySelector('h4')?.textContent || 'Group';
-        alert(title + '\\n\\n' + (card.querySelector('p')?.textContent || 'No description.'));
+        const card  = previewBtn.closest(".course-card");
+        const title = card.querySelector("h3")?.textContent || "Group";
+        const desc  = card.querySelector("p")?.textContent  || "No description.";
+        alert(title + "\n\n" + desc);
       }
     });
 
-    // Small debounce helper
-    function debounce(fn, wait){
-      let t;
-      return function(...args){
-        clearTimeout(t);
-        t = setTimeout(()=>fn.apply(this,args), wait);
-      };
-    }
-
-    // Initial setup
     updateSubFilterVisibility();
     loadJoinedState();
     filterGroups();
-
-    // Accessibility helper: hide visually but keep accessible
-    (function addSRStyles(){
-      const style = document.createElement('style');
-      style.textContent = '.sr-only{ position:absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;}';
-      document.head.appendChild(style);
-    })();
   </script>
 </body>
 </html>
