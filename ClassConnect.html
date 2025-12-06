@@ -4,17 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ClassConnect</title>
+
+  <!-- Link to shared site styles -->
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
 
+  <!-- Logo, navigation, and login/create buttons -->
   <header>
     <div class="logo-container">
+      <!-- App logo icon -->
       <img src="download.png" alt="ClassConnect Logo">
+      <!-- App name -->
       <h1>ClassConnect</h1>
     </div>
 
+    <!-- Main navigation bar -->
     <nav>
       <ul>
         <li><a href="ClassConnect.html">Home</a></li>
@@ -24,42 +30,57 @@
       </ul>
     </nav>
 
+    <!-- Buttons that open login/create-account popups -->
     <div class="auth-buttons">
       <a id="loginBtn">Login</a>
       <a id="createBtn">Create Account</a>
     </div>
   </header>
 
+  <!-- Main page welcome section -->
   <main>
     <h2>Welcome to ClassConnect</h2>
     <p>Connecting students and staff across any course.</p>
   </main>
 
+  <!-- Overlay shown when popup is active -->
   <div id="overlay"></div>
 
+  <!-- Create account popup -->
   <div id="createPopup" class="popup">
     <h3>Create Account</h3>
     
+    <!-- Username and password inputs -->
     <input id="newUser" type="text" placeholder="Username" required>
     <input id="newPass" type="password" placeholder="Password" required>
 
+    <!-- Submit and cancel -->
     <button id="createSubmit">Create</button>
     <button type="button" class="close-btn" id="closeCreate">Cancel</button>
+
+    <!-- Feedback message returned by PHP -->
     <div id="createMsg" class="message"></div>
   </div>
 
+  <!-- Login popup -->
   <div id="loginPopup" class="popup">
     <h3>Login</h3>
 
+    <!-- Username and password inputs -->
     <input id="loginUser" type="text" placeholder="Username" required>
     <input id="loginPass" type="password" placeholder="Password" required>
 
+    <!-- Submit and cancel -->
     <button id="loginSubmit">Login</button>
     <button type="button" class="close-btn" id="closeLogin">Cancel</button>
+
+    <!-- Feedback message returned by PHP -->
     <div id="loginMsg" class="message"></div>
   </div>
 
+  <!-- Script for popups, login, and account creation -->
   <script>
+    // References
     const overlay = document.getElementById("overlay");
     const loginBtn = document.getElementById("loginBtn");
     const createBtn = document.getElementById("createBtn");
@@ -68,6 +89,7 @@
     const closeLogin = document.getElementById("closeLogin");
     const closeCreate = document.getElementById("closeCreate");
 
+    // Open popups
     loginBtn.addEventListener("click", () => {
       loginPopup.style.display = "block";
       overlay.style.display = "block";
@@ -78,16 +100,19 @@
       overlay.style.display = "block";
     });
 
+    /* Close popups */
     closeLogin.addEventListener("click", closeAll);
     closeCreate.addEventListener("click", closeAll);
     overlay.addEventListener("click", closeAll);
 
+    // Hides all popups and overlay
     function closeAll() {
       loginPopup.style.display = "none";
       createPopup.style.display = "none";
       overlay.style.display = "none";
     }
 	
+    // Global message function
 	function showGlobalMessage(text) {
       const msg = document.getElementById("globalMessage");
       msg.innerText = text;
@@ -98,10 +123,12 @@
       }, 2500);
     }
 
+    // Create account request
     document.getElementById("createSubmit").addEventListener("click", () => {
       const user = document.getElementById("newUser").value;
       const pass = document.getElementById("newPass").value;
 
+      // Send POST request to backend PHP script
       fetch("createAccount.php", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -109,8 +136,10 @@
       })
       .then(res => res.text())
       .then(data => {
+        // Display server response inside popup
         document.getElementById("createMsg").innerText = data;
 
+        // On success sends alert and reloads homepage
         if (data.includes("success")) {
           alert("Account created successfully!");
 		  window.location.href = "ClassConnect.html";
@@ -118,10 +147,12 @@
       });
     });
 
+    // Login request
     document.getElementById("loginSubmit").addEventListener("click", () => {
       const user = document.getElementById("loginUser").value;
       const pass = document.getElementById("loginPass").value;
 
+      // Send POST request to backend PHP script
       fetch("login.php", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -129,8 +160,10 @@
       })
       .then(res => res.text())
       .then(data => {
+        // Display login message in popup
         document.getElementById("loginMsg").innerText = data;
 
+        // If successful, redirects to homepage
         if (data.includes("success")) {
           alert("Logged in successfully!");
           window.location.href = "ClassConnect.html";
@@ -142,5 +175,3 @@
 
 </body>
 </html>
-
-
