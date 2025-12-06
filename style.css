@@ -1,3 +1,4 @@
+/* root color and spacing variables used throughout the site */
 :root {
   --accent: #2a9d8f;
   --muted: #6b7280;
@@ -7,6 +8,7 @@
   --gap: 16px;
 }
 
+/* base page styling */
 body {
   margin: 0;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -16,6 +18,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* header layout and dark gradient background */
 header {
   display: flex;
   align-items: center;
@@ -26,6 +29,7 @@ header {
   box-shadow: 0 2px 5px rgba(15, 23, 42, 0.35);
 }
 
+/* logo section inside header */
 .logo-container {
   display: flex;
   align-items: center;
@@ -44,6 +48,7 @@ header {
   margin: 0;
 }
 
+/* top navigation links */
 nav ul {
   display: flex;
   list-style: none;
@@ -62,11 +67,13 @@ nav a {
   transition: background 0.2s ease, color 0.2s ease;
 }
 
+/* highlight for active or hovered navigation link */
 nav a.active,
 nav a:hover {
   background: rgba(255, 255, 255, 0.08);
 }
 
+/* login and create-account buttons in header */
 .auth-buttons a {
   text-decoration: none;
   color: #fff;
@@ -84,6 +91,7 @@ nav a:hover {
   transform: translateY(-1px);
 }
 
+/* main homepage welcome section */
 main {
   text-align: center;
   padding: 50px 20px;
@@ -102,6 +110,7 @@ main p {
   margin: 15px auto;
 }
 
+/* popup window styling for login and create-account */
 .popup {
   display: none;
   position: fixed;
@@ -126,6 +135,7 @@ main p {
   font-size: 0.95rem;
 }
 
+/* primary popup buttons */
 .popup button {
   background-color: var(--accent);
   color: white;
@@ -140,12 +150,14 @@ main p {
   background-color: #238277;
 }
 
+/* cancel button inside popup */
 .popup .close-btn {
   background-color: #e5e7eb;
   color: #111827;
   margin-left: 10px;
 }
 
+/* dimmed overlay behind popups */
 #overlay {
   display: none;
   position: fixed;
@@ -156,6 +168,7 @@ main p {
   z-index: 5;
 }
 
+/* layout container used on some pages */
 .container {
   display: flex;
   padding: 30px;
@@ -164,6 +177,7 @@ main p {
   margin: 0 auto;
 }
 
+/* sidebar on some pages */
 .sidebar {
   width: 220px;
   background: var(--card);
@@ -198,6 +212,7 @@ main p {
   color: var(--accent);
 }
 
+/* main content card styling */
 .content {
   flex-grow: 1;
   background: var(--card);
@@ -206,6 +221,7 @@ main p {
   box-shadow: 0 2px 5px rgba(15, 23, 42, 0.12);
 }
 
+/* simple form used on some pages */
 .course-form {
   text-align: center;
   margin-top: 100px;
@@ -234,6 +250,7 @@ main p {
   background-color: #238277;
 }
 
+/* bar above course/group list for filters */
 .filters-bar {
   background-color: #0f172a;
   padding: 6px 0;
@@ -254,7 +271,7 @@ main p {
 
 .filters-bar a {
   text-decoration: none;
-  color: #facc15; /* gold-ish */
+  color: #facc15;
   font-weight: 600;
   padding: 8px 12px;
   border-radius: 6px;
@@ -267,6 +284,7 @@ main p {
   color: #0f172a;
 }
 
+/* dropdown menus under filter options */
 .filters-bar .dropdown-content {
   opacity: 0;
   visibility: hidden;
@@ -295,12 +313,14 @@ main p {
   color: #0f172a;
 }
 
+/* reveal dropdown on hover */
 .filters-bar li.dropdown:hover > .dropdown-content {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
 }
 
+/* general layout used on courses and groups pages */
 main.courses-page {
   max-width: 1100px;
   margin: 20px auto 80px;
@@ -308,6 +328,7 @@ main.courses-page {
   text-align: left;
 }
 
+/* search/filter area at top of courses/groups pages */
 .course-search {
   margin-bottom: 18px;
 }
@@ -323,6 +344,7 @@ main.courses-page {
   align-items: center;
 }
 
+/* input fields used in search/filter bars */
 .course-search-bar input[type="search"],
 .course-search-bar select {
   padding: 8px 10px;
@@ -332,6 +354,7 @@ main.courses-page {
   font-size: 0.95rem;
 }
 
+/* joined courses/groups pill section */
 .joined-section {
   margin-bottom: 20px;
   background: var(--card);
@@ -352,6 +375,7 @@ main.courses-page {
   margin-top: 8px;
 }
 
+/* individual pill representing a joined course or group */
 .joined-pill {
   display: inline-flex;
   align-items: center;
@@ -376,6 +400,7 @@ main.courses-page {
   color: #6b7280;
 }
 
+/* course/group cards grid */
 .courses-section h2 {
   margin-top: 0;
   font-size: 1.2rem;
@@ -388,6 +413,7 @@ main.courses-page {
   margin-top: 12px;
 }
 
+/* individual card component */
 .course-card {
   background: var(--card);
   border-radius: 10px;
@@ -413,6 +439,7 @@ main.courses-page {
   font-size: 0.9rem;
 }
 
+/* action buttons inside each card */
 .course-actions {
   margin-top: auto;
   display: flex;
@@ -420,6 +447,7 @@ main.courses-page {
   align-items: center;
 }
 
+/* main action button */
 .primary-btn {
   background: var(--accent);
   color: #fff;
@@ -434,6 +462,7 @@ main.courses-page {
   background: #238277;
 }
 
+/* secondary outline button */
 .secondary-btn {
   background: transparent;
   border: 1px solid #e6e9ee;
@@ -444,6 +473,7 @@ main.courses-page {
   font-size: 0.9rem;
 }
 
+/* posts section under selected course/group */
 .posts-section {
   margin-top: 32px;
   background: var(--card);
@@ -469,6 +499,7 @@ main.courses-page {
   color: var(--muted);
 }
 
+/* scrolling container for posts */
 .posts-list {
   margin-top: 12px;
   display: flex;
@@ -498,6 +529,7 @@ main.courses-page {
   padding: 8px 4px;
 }
 
+/* form used to add new posts */
 .new-post-form {
   margin-top: 14px;
   display: flex;
@@ -520,12 +552,14 @@ main.courses-page {
   align-self: flex-end;
 }
 
+/* hide desktop nav on small screens */
 @media (max-width: 520px) {
   nav ul {
     display: none;
   }
 }
 
+/* screen-reader-only class used for accessibility */
 .sr-only {
   position: absolute !important;
   width: 1px;
