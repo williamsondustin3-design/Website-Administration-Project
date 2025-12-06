@@ -5,24 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Courses - ClassConnect</title>
 
+  <!-- Link to shared site styles -->
   <link rel="stylesheet" href="style.css" />
-
-  
 </head>
 
 <body>
+  <!-- Site header with logo and main navigation -->
   <header>
     <div class="logo-container">
+      <!-- App logo -->
       <img src="download.png" alt="ClassConnect Logo">
       <div>
+        <!-- App name -->
         <h1>ClassConnect</h1>
+        <!-- Small subtitle to explain this page -->
         <div style="font-size:0.85rem; color:rgba(255,255,255,0.8)">Courses & Material Lookup</div>
       </div>
     </div>
 
+    <!-- Main navigation menu -->
     <nav aria-label="Main navigation">
       <ul>
         <li><a href="ClassConnect.html">Home</a></li>
+        <!-- Current page is Courses -->
         <li><a href="courses.html" class="active">Courses</a></li>
         <li><a href="groups.html">Groups</a></li>
         <li><a href="about.html">About</a></li>
@@ -30,15 +35,20 @@
     </nav>
   </header>
 
+  <!-- Main content area for Courses page -->
   <main class="courses-page">
+    <!-- Search and filter section for courses -->
     <section class="course-search">
       <div class="course-search-bar">
+        <!-- Text search for course title/description -->
         <input id="courseSearch" type="search" placeholder="Search courses..." aria-label="Search courses">
+        <!-- Filter courses by term -->
         <select id="termFilter" aria-label="Filter by term">
           <option value="">All Terms</option>
           <option value="fall-2025">Fall 2025</option>
           <option value="spring-2026">Spring 2026</option>
         </select>
+        <!-- Filter by joined status -->
         <select id="statusFilter" aria-label="Filter by status">
           <option value="">All Courses</option>
           <option value="joined">Joined</option>
@@ -47,20 +57,25 @@
       </div>
     </section>
 
+    <!-- Joined courses section at the top -->
     <section class="joined-section" aria-labelledby="joined-heading">
       <h2 id="joined-heading">Joined Courses</h2>
       <p class="joined-helper">
         Click a joined course to jump to its discussion and posts below.
       </p>
+      <!-- Pills for each joined course are rendered here by JavaScript -->
       <div id="joinedCoursesList" class="joined-list">
       </div>
     </section>
 
+    <!-- Course catalog grid -->
     <section class="courses-section" aria-labelledby="courses-heading">
       <h2 id="courses-heading">Courses</h2>
       <p>Browse available courses. Preview details or join directly from this page.</p>
 
+      <!-- All course cards live in this grid -->
       <div id="coursesGrid" class="courses-grid">
+        <!-- Single course card with course metadata -->
         <article class="course-card" data-course-id="c1" data-term="fall-2025">
           <h3>CIS 350 – Data Structures</h3>
           <p class="course-meta">Fall 2025 • 3 Credits • Dr. Smith</p>
@@ -68,7 +83,9 @@
             Linked lists, stacks, queues, trees, sorting, and searching.
           </p>
           <div class="course-actions">
+            <!-- Preview just sets current course and scrolls to posts -->
             <button class="secondary-btn preview-btn">Preview Course</button>
+            <!-- Join button toggles joined/not joined state -->
             <button class="primary-btn join-btn">Join Course</button>
           </div>
         </article>
@@ -100,20 +117,24 @@
       </div>
     </section>
 
+    <!-- Posts section for the currently selected course -->
     <section id="postsSection" class="posts-section" aria-labelledby="posts-heading">
       <div class="posts-header">
         <div>
           <h2 id="posts-heading">Course Posts</h2>
+          <!-- Label shows which course you're posting to -->
           <div id="currentCourseLabel" class="current-course-label">
             No course selected. Join or click a course to start posting.
           </div>
         </div>
       </div>
 
+      <!-- Existing posts for the selected course are rendered here -->
       <div id="postsList" class="posts-list">
         <div class="post-empty">No posts yet.</div>
       </div>
 
+      <!-- Form to add a new post for the selected course -->
       <form id="newPostForm" class="new-post-form">
         <label for="postText" class="sr-only">New post</label>
         <textarea id="postText" placeholder="Write a new post for this course..."></textarea>
@@ -123,6 +144,7 @@
   </main>
 
   <script>
+    // ----- DOM ELEMENT REFERENCES -----
     const coursesGrid = document.getElementById("coursesGrid");
     const courseCards = Array.from(document.querySelectorAll(".course-card"));
     const joinedListEl = document.getElementById("joinedCoursesList");
@@ -136,20 +158,27 @@
     const termFilter = document.getElementById("termFilter");
     const statusFilter = document.getElementById("statusFilter");
 
+    // Tracks which course the user is currently viewing/posting to
     let currentCourseId = null;
 
+    // ----- LOCAL STORAGE HELPERS -----
+
+    // Get all joined courses from localStorage
     function getJoinedCourses() {
       try {
         return JSON.parse(localStorage.getItem("joinedCourses_v1") || "{}");
       } catch (e) {
+        // If parsing fails, fall back to empty object
         return {};
       }
     }
 
+    // Save joined course data to localStorage
     function setJoinedCourses(data) {
       localStorage.setItem("joinedCourses_v1", JSON.stringify(data));
     }
 
+    // Get all course posts from localStorage
     function getCoursePosts() {
       try {
         return JSON.parse(localStorage.getItem("coursePosts_v1") || "{}");
@@ -158,10 +187,14 @@
       }
     }
 
+    // Save all course posts to localStorage
     function setCoursePosts(data) {
       localStorage.setItem("coursePosts_v1", JSON.stringify(data));
     }
 
+    // ----- JOIN BUTTON / JOINED STATE -----
+
+    // Update join button text based on whether course is joined
     function updateJoinButtons() {
       const joined = getJoinedCourses();
       courseCards.forEach(card => {
@@ -177,13 +210,16 @@
       });
     }
 
+    // Render the pills for joined courses at the top
     function renderJoinedPills() {
       const joined = getJoinedCourses();
       joinedListEl.innerHTML = "";
 
+      // Sort joined courses by join date so they're stable in order
       const joinedIds = Object.keys(joined)
         .sort((a, b) => new Date(joined[a].joinedAt) - new Date(joined[b].joinedAt));
 
+      // If no joined courses, show a friendly empty message
       if (joinedIds.length === 0) {
         const empty = document.createElement("div");
         empty.className = "post-empty";
@@ -192,6 +228,7 @@
         return;
       }
 
+      // Build a pill for each joined course
       joinedIds.forEach(id => {
         const card = courseCards.find(c => c.dataset.courseId === id);
         if (!card) return;
@@ -211,6 +248,7 @@
         viewSpan.style.color = "#4b5563";
         viewSpan.textContent = "View posts";
 
+        // Small X button to leave the course
         const leaveBtn = document.createElement("button");
         leaveBtn.type = "button";
         leaveBtn.className = "leave-btn";
@@ -223,10 +261,12 @@
       });
     }
 
+    // Mark a course as joined and refresh UI
     function joinCourse(card) {
       const id = card.dataset.courseId;
       const joined = getJoinedCourses();
       if (!joined[id]) {
+        // Store time of joining for ordering
         joined[id] = { joinedAt: new Date().toISOString() };
         setJoinedCourses(joined);
         updateJoinButtons();
@@ -234,6 +274,7 @@
       }
     }
 
+    // Remove a course from joined list
     function leaveCourseById(id) {
       const joined = getJoinedCourses();
       if (joined[id]) {
@@ -242,6 +283,7 @@
         updateJoinButtons();
         renderJoinedPills();
 
+        // If user is currently on that course, clear the selection
         if (currentCourseId === id) {
           currentCourseId = null;
           currentCourseLabel.textContent =
@@ -251,6 +293,9 @@
       }
     }
 
+    // ----- COURSE SELECTION & POSTS -----
+
+    // Set which course is currently active and scroll to posts
     function setCurrentCourse(id) {
       const card = courseCards.find(c => c.dataset.courseId === id);
       if (!card) return;
@@ -260,12 +305,15 @@
       currentCourseLabel.textContent = "Posting to: " + name;
       renderPosts();
 
+      // Smooth scroll to posts section so user can see discussion
       postsSection.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
+    // Render all posts for the current course
     function renderPosts() {
       postsListEl.innerHTML = "";
 
+      // If no course is selected, show helper text
       if (!currentCourseId) {
         const empty = document.createElement("div");
         empty.className = "post-empty";
@@ -277,6 +325,7 @@
       const allPosts = getCoursePosts();
       const postsForCourse = allPosts[currentCourseId] || [];
 
+      // If course has no posts, show empty message
       if (postsForCourse.length === 0) {
         const empty = document.createElement("div");
         empty.className = "post-empty";
@@ -285,6 +334,7 @@
         return;
       }
 
+      // Create a simple card for each post
       postsForCourse.forEach(post => {
         const item = document.createElement("div");
         item.className = "post-card";
@@ -303,9 +353,12 @@
       });
     }
 
+    // Handle the form submission when user creates a new post
     function handleNewPostSubmit(event) {
       event.preventDefault();
       const text = postTextInput.value.trim();
+
+      // Require a course to be selected first
       if (!currentCourseId) {
         alert("Select a course first (click a course or a joined course pill).");
         return;
@@ -313,9 +366,13 @@
       if (!text) return;
 
       const allPosts = getCoursePosts();
+
+      // Make sure we have an array for this course
       if (!Array.isArray(allPosts[currentCourseId])) {
         allPosts[currentCourseId] = [];
       }
+
+      // Push new post with timestamp
       allPosts[currentCourseId].push({
         text,
         createdAt: new Date().toISOString()
@@ -326,7 +383,9 @@
       renderPosts();
     }
 
-    // --- FILTERING ---
+    // ----- FILTERING -----
+
+    // Show/hide courses based on search text, term, and joined status
     function filterCourses() {
       const q = courseSearch.value.trim().toLowerCase();
       const term = termFilter.value;
@@ -342,21 +401,26 @@
 
         let visible = true;
 
+        // Filter by search text in title or description
         if (q && !title.includes(q) && !desc.includes(q)) {
           visible = false;
         }
 
+        // Filter by selected term
         if (term && term !== courseTerm) {
           visible = false;
         }
 
+        // Filter by joined status
         if (status === "joined" && !isJoined) visible = false;
         if (status === "not-joined" && isJoined) visible = false;
 
+        // Show/hide card
         card.style.display = visible ? "flex" : "none";
       });
     }
 
+    // Simple debounce helper so we don't filter on every keystroke instantly
     function debounce(fn, wait) {
       let t;
       return function (...args) {
@@ -365,6 +429,9 @@
       };
     }
 
+    // ----- EVENT LISTENERS -----
+
+    // Handle clicks on course cards (join/preview)
     coursesGrid.addEventListener("click", (e) => {
       const joinBtn = e.target.closest(".join-btn");
       const previewBtn = e.target.closest(".preview-btn");
@@ -374,9 +441,11 @@
 
       const id = card.dataset.courseId;
 
+      // Join button toggles join/leave and selects course
       if (joinBtn) {
         const joined = getJoinedCourses();
         if (joined[id]) {
+          // If already joined, clicking join again will leave
           leaveCourseById(id);
         } else {
           joinCourse(card);
@@ -384,32 +453,40 @@
         }
       }
 
+      // Preview button just selects the course for posts without forcing join
       if (previewBtn) {
         setCurrentCourse(id);
       }
     });
 
+    // Handle clicks on joined course pills (view posts or leave)
     joinedListEl.addEventListener("click", (e) => {
       const pill = e.target.closest(".joined-pill");
       if (!pill) return;
 
       const id = pill.dataset.courseId;
 
+      // Clicking the X button removes the course from joined list
       if (e.target.matches(".leave-btn")) {
         e.stopPropagation();
         leaveCourseById(id);
       } else {
+        // Clicking the rest of the pill sets that course as current
         setCurrentCourse(id);
       }
     });
 
+    // New post form submit
     newPostForm.addEventListener("submit", handleNewPostSubmit);
 
+    // Filter events: search input uses debounce, dropdowns filter instantly
     courseSearch.addEventListener("input", debounce(filterCourses, 200));
     termFilter.addEventListener("change", filterCourses);
     statusFilter.addEventListener("change", filterCourses);
 
+    // ----- INITIAL PAGE SETUP -----
     (function init() {
+      // Make sure join buttons, joined pills, and posts reflect saved data
       updateJoinButtons();
       renderJoinedPills();
       renderPosts();
